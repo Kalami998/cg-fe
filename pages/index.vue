@@ -7,7 +7,7 @@
     <div class="having-flex">
       <div v-for="(item, index) in dataList" :key="index" class="having-right">
         <div class="category-name">{{ item.categoryName }}</div>
-        <div class="it-content">
+        <div class="it-content" @click="goDetail(it)">
           <div v-for="(it, sort) in item.list" :key="sort">
             <div class="detail">
               <div class="left-content">
@@ -116,10 +116,17 @@ export default {
       ],
     }
   },
+  methods: {
+    goDetail(it) {
+      this.$router.push({
+        path: '/detail',
+      })
+    },
+  },
 }
 </script>
 
-<style>
+<style scoped>
 /* Sample `apply` at-rules with Tailwind CSS
 .container {
 @apply min-h-screen flex justify-center items-center text-center mx-auto;
@@ -147,6 +154,7 @@ export default {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
+  cursor: pointer;
 }
 .having-right {
   margin-right: 18px;

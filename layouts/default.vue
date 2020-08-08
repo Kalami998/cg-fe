@@ -16,6 +16,10 @@ export default {
 }
 </script>
 <style>
+@font-face {
+  font-family: 'DINPro-Bold,DINPro,DINPro-regular';
+  src: url('/assets/css/fonts/DINPro-Bold,DINPro');
+}
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
