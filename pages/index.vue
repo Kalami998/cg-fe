@@ -116,6 +116,7 @@ export default {
       ],
     }
   },
+  mounted() {},
   methods: {
     goDetail(it) {
       this.$router.push({
@@ -179,6 +180,9 @@ export default {
   align-items: flex-start;
   padding: 30px 0 0 24px;
   text-align: left;
+}
+.detail:hover {
+  background: #fafafa;
 }
 .product-img {
   width: 64px;

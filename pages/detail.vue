@@ -22,32 +22,44 @@
                 <img class="demo-icon" src="~assets/img/demo.png" alt />
               </div>
               <span class="it-name"
-                >{{ productInfo.name }}
+                >{{ productInfo.title }}
                 <span class="symbol-desc">{{ productInfo.symbol }}</span></span
               >
             </div>
 
             <div class="tag-area">
-              <span
-                v-for="(tag, index) in productInfo.type"
+              <!-- <span
+                v-for="(tag, index) in productInfo.category"
                 :key="index"
                 class="tag-style"
                 >{{ tag }}</span
-              >
+              > -->
+              <span class="tag-style">{{ productInfo.category }}</span>
             </div>
 
-            <div class="brief">{{ productInfo.brief }}</div>
+            <div class="brief">{{ productInfo.description }}</div>
 
             <div class="icon-area">
-              <img class="icon-size" src="~assets/img/facebook.png" alt />
-              <img class="icon-size" src="~assets/img/tiwtter.png" alt />
-              <img class="icon-size" src="~assets/img/youtube.png" alt />
-              <img class="icon-size" src="~assets/img/in.png" alt />
+              <img
+                v-for="(item, index) in productInfo.socials"
+                :key="index"
+                :src="returnRoute(item.text)"
+                alt=""
+                class="icon-size"
+                @click="goItem(item.url)"
+              />
             </div>
 
             <div class="btn-area">
-              <div class="dosome-btn btn-right">WEBSITE</div>
-              <div class="dosome-btn">WHITEPAPAER</div>
+              <div
+                class="dosome-btn btn-right"
+                @click="goItem(producInfo.website)"
+              >
+                WEBSITE
+              </div>
+              <div class="dosome-btn" @click="goItem(producInfo.whitepaper)">
+                WHITEPAPAER
+              </div>
             </div>
           </div>
         </div>
@@ -163,35 +175,6 @@ export default {
   data() {
     return {
       fans: 33.3,
-      productInfo: {
-        type: [
-          'Exchange',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-          'Defi',
-        ],
-        symbol: '(DOT)',
-        name: 'DMM Governance Token',
-        id: '4373249324k3jh3984y3924y43',
-        price: '1100',
-        pop: 'high',
-        desc: 'Huobi goes live on August 3',
-        brief:
-          'Ownership of DMG represents the right to govern the parameters of the DMM Protocol, a claim on the excess revenue generated from the DMM ecosystem, as well as governance over the ability and decisions surrounding the introduction of new assets to the ecosystem in Ownership of DMG represents the right to govern the parameters of the DMM Protocol, a claim on the excess revenue generated from the DMM ecosystem, as well as governance over the ability and decisions surrounding the introduction of new assets to the ecosystem in.',
-        place: 'TOKEN',
-        total: '80,808,080',
-        base: 'ETH',
-        adress: '0xd6ad7a6750a7593e092a9b218d66c0a814a3436e',
-      },
       list: [
         {
           img: '',
@@ -219,6 +202,73 @@ export default {
         { time: '2020/08/03', desc: 'list on houbi' },
         { time: '2020/08/03', desc: 'list on houbi' },
       ],
+      productInfo: {
+        title: 'DIA',
+        category: 'DeFi',
+        main: 'https://player.vimeo.com/video/436079874?dnt=1&app_id=122963',
+        logo:
+          '//icodrops.com/wp-content/plugins/a3-lazy-load/assets/images/lazy_placeholder.gif',
+        description:
+          'DIA (Decentralised Information Asset) is an open-source, data and oracle platform for the DeFi ecosystem. DIA leverages crypto economic incentives to drive supply, share and use transparent, crowd-verified price data and oracles on financial and digital assets.',
+        website: 'https://diadata.org/',
+        whitepaper: '',
+        socials: [
+          {
+            text: 'github',
+            url: 'https://github.com/diadata-org',
+          },
+          {
+            text: 'twitter',
+            url: 'https://twitter.com/DIAdata_org',
+          },
+          {
+            text: 'telegram',
+            url: 'https://t.me/DIAdata_org',
+          },
+          {
+            text: 'linkedin',
+            url: 'https://www.linkedin.com/company/diadata-org/',
+          },
+          {
+            text: 'medium',
+            url: 'https://medium.com/dia-insights',
+          },
+        ],
+        rate: [],
+        icoRate: '',
+        ticker: 'DIA',
+        tag: 'DeFi',
+        total: '200,000,000',
+        baseChain: 'ETH',
+        address: '0x84ca8bc7997272c7cfb4d0cd3d55cd942b3c9419',
+        id: '11955',
+        markets: [
+          {
+            exchange: 'Uniswap (v2)',
+            volume: 74.42,
+          },
+          {
+            exchange: ' Gnosis Protocol',
+            volume: 15.62,
+          },
+          {
+            exchange: 'Hotbit',
+            volume: 5.62,
+          },
+          {
+            exchange: 'BiKi',
+            volume: 4.35,
+          },
+          {
+            exchange: 'Hoo.com',
+            volume: 2.33,
+          },
+          {
+            exchange: 'Bamboo Relay',
+            volume: null,
+          },
+        ],
+      },
     }
   },
   methods: {
@@ -226,6 +276,15 @@ export default {
       this.$router.push({
         path: '/',
       })
+    },
+    returnRoute(item) {
+      return `/img/${item}.png`
+    },
+    goItem(url) {
+      if (url) {
+        location.href = url
+      } else {
+      }
     },
   },
 }
@@ -259,7 +318,6 @@ export default {
   display: flex;
   align-items: center;
   height: 20px;
-  line-height: 20px;
   color: #028ee9;
   margin-bottom: 10px;
   cursor: pointer;
@@ -272,6 +330,7 @@ export default {
   width: 356px;
   display: flex;
   flex-wrap: wrap;
+  padding-left: 42px;
 }
 .tag-style {
   margin: 0 10px 10px 0;
@@ -295,7 +354,7 @@ export default {
 }
 .left-icon {
   width: 564px;
-  height: 310px;
+  height: 340px;
   margin-right: 20px;
 }
 .right-info {
