@@ -159,12 +159,29 @@ export default {
         this.allTitle = 'MAINLY LISTED IN CEX'
         break
     }
-    window.addEventListener('scroll', this.getList, true)
+    window.addEventListener('scroll', this.debonce(this.getList, 3000), true)
   },
   destroyed() {
     window.removeEventListener('scroll', this.getList)
   },
   methods: {
+    debonce(func, delay) {
+      let timer = null
+      let startTime = Date.now()
+      return function () {
+        const curTime = Date.now()
+        const remaining = delay - (curTime - startTime)
+        const context = this
+        const args = arguments
+        clearTimeout(timer)
+        if (remaining <= 0) {
+          func.apply(context, args)
+          startTime = Date.now()
+        } else {
+          timer = setTimeout(func, remaining)
+        }
+      }
+    },
     async getList() {
       this.scrollHeight =
         document.body.scrollTop ||
@@ -177,6 +194,7 @@ export default {
           document.querySelector('.all-main').offsetHeight &&
         !this.keepWatch
       ) {
+        this.pageNum += 15
         const res = await this.$axios.get(
           `${baseUrl}/projects?_where[marketCategory]=${this.$route.query.number}&_start=${this.pageNum}&_limit=15`
         )
@@ -184,12 +202,10 @@ export default {
         if (res.data.length) {
           this.allList.push.apply(this.allList, res.data)
         }
-        this.pageNum += 15
-        setTimeout(() => {
-          if (res.data.length < 15) {
-            this.keepWatch = true
-          }
-        }, 5000)
+
+        if (res.data.length < 15) {
+          this.keepWatch = true
+        }
       }
     },
     backHome() {
