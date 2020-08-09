@@ -1,10 +1,12 @@
 <template>
   <div class="search-page">
     <div class="search-content">
-      <a href="https://twitter.com/CryptoGala" class="popularity">
-        <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
+      <div class="popularity">
+        <a href="https://twitter.com/CryptoGala"
+          ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
+        /></a>
         TWITTER
-      </a>
+      </div>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />
         <span>index</span>
@@ -46,13 +48,13 @@
             </td>
             <td class="body-td">{{ item.tag }}</td>
             <td class="body-td">
-              {{ item.rates.length ? item.rates[0] : '' }}
+              {{ item.icoRate ? item.icoRate : '' }}
             </td>
             <td class="body-td">{{ item.category }}</td>
             <td class="body-td">
               <div class="having-flex">
                 <div class="address-area">{{ item.address }}</div>
-                <imgs
+                <img
                   v-if="item.address"
                   src="~assets/img/copy.png"
                   alt
@@ -89,18 +91,52 @@ export default {
     )
     return {
       searchList: data,
+      searchTitle: query.keyword.toUpperCase(),
     }
   },
   data() {
     return {
       fans: 33.3,
       searchTitle: 'DMM Governance',
+      keepWatch: false, // 监听
+      pageNum: 15, // 页数
     }
   },
   mounted() {
     window.scrollTo(0, 0)
+    // window.addEventListener('scroll', this.getList, true)
+  },
+  destroyed() {
+    // window.removeEventListener('scroll', this.getList)
   },
   methods: {
+    // async getList() {
+    //   this.scrollHeight =
+    //     document.body.scrollTop ||
+    //     document.documentElement.scrollTop ||
+    //     window.pageYOffset
+    //   // console.log(window.screen.availHeight, '屏幕高度')
+    //   // console.log(document.querySelector('.all-main').offsetHeight, '屏幕高度')
+    //   if (
+    //     this.scrollHeight * 1.5 >=
+    //       document.querySelector('.all-main').offsetHeight &&
+    //     !this.keepWatch
+    //   ) {
+    //     const res = await this.$axios.get(
+    //       `${baseUrl}/projects?_where[marketCategory]=${this.$route.query.number}&_start=${this.pageNum}&_limit=15`
+    //     )
+
+    //     if (res.data.length) {
+    //       this.allList.push.apply(this.allList, res.data)
+    //     }
+    //     this.pageNum += 15
+    //     setTimeout(() => {
+    //       if (res.data.length < 15) {
+    //         this.keepWatch = true
+    //       }
+    //     }, 5000)
+    //   }
+    // },
     backHome() {
       this.$router.push({
         path: '/',

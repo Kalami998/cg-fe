@@ -1,10 +1,12 @@
 <template>
   <div class="detail-page">
     <div class="detail-content">
-      <a href="https://twitter.com/CryptoGala" class="popularity">
-        <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
+      <div class="popularity">
+        <a href="https://twitter.com/CryptoGala"
+          ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
+        /></a>
         TWITTER
-      </a>
+      </div>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />
         <span>index</span>
@@ -85,6 +87,7 @@
                 :key="index"
                 :src="returnRoute(item.text)"
                 alt
+                :title="item.url"
                 class="icon-size"
                 @click="goItem(item.url)"
               />
@@ -114,8 +117,10 @@
               <span class="strong-desc">{{ productInfo.ticker }}</span>
             </div>
             <div>
-              total:
-              <span class="strong-desc">{{ productInfo.total }}</span>
+              TOTAL:
+              <span class="strong-desc">{{
+                productInfo.total ? productInfo.total : 'NOT SET'
+              }}</span>
             </div>
             <div>
               base:
@@ -159,23 +164,25 @@
 
         <div class="divi-line"></div>
 
-        <div class="rate-style">
+        <div v-if="productInfo.rates.length > 0" class="rate-style">
           <div class="small-section">RATING</div>
-          <div
-            v-for="(item, index) in productInfo.rates"
-            :key="index"
-            class="box-style"
-          >
-            <p>
-              {{ item }}
-            </p>
-            <!-- <p class="show-desc">
-              {{ productInfo.icoRate ? productInfo.icoRate : 'very high' }}
-            </p> -->
+          <div class="rate-area">
+            <div
+              v-for="(item, index) in productInfo.rates"
+              :key="index"
+              class="box-style"
+            >
+              <p>
+                {{ item.text }}
+              </p>
+              <p class="show-desc">
+                {{ item.type }}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="divi-line"></div>
+        <div v-if="productInfo.rates.length > 0" class="divi-line"></div>
 
         <div v-if="productInfo.events" class="rate-style">
           <div class="small-section">IMPORTANT EVENTS</div>
@@ -189,10 +196,10 @@
           </div>
         </div>
 
-        <!-- <div class="divi-line"></div> -->
+        <div v-if="productInfo.events" class="divi-line"></div>
 
         <div>
-          <div class="small-section">COLLECTIONVIEW</div>
+          <div v-if="showList.length" class="small-section">RECOMMEND</div>
           <div class="other-product">
             <div v-for="(it, sort) in showList" :key="sort">
               <div class="detail">
@@ -218,7 +225,9 @@
                       @click.stop="cliBoadId(it.address)"
                     />
                   </div>
-                  <div class="product-price">total:{{ it.total }}</div>
+                  <div class="product-price">
+                    TOTAL:{{ it.total ? it.total : 'NOT SET' }}
+                  </div>
                   <div class="product-desc">{{ it.desc ? it.desc : '' }}</div>
                 </div>
               </div>
@@ -331,6 +340,7 @@ export default {
         }
       })
     }
+    console.log('详情页数据', this.productInfo)
     this.getListOne()
   },
   methods: {
@@ -508,6 +518,7 @@ export default {
   width: 22px;
   height: 22px;
   margin-right: 5px;
+  cursor: pointer;
 }
 .btn-right {
   margin-right: 16px;
@@ -587,6 +598,10 @@ export default {
 .rate-style {
   margin-bottom: 40px;
 }
+.rate-area {
+  display: flex;
+  align-items: flex-start;
+}
 .box-style {
   padding: 14px 0;
   width: 180px;
@@ -595,6 +610,7 @@ export default {
   background: #eee;
   border-radius: 2px;
   border: 1px solid rgba(238, 238, 238, 1);
+  margin-right: 10px;
 }
 .line-style {
   display: flex;
@@ -623,7 +639,7 @@ export default {
 .detail {
   display: flex;
   align-items: flex-start;
-  padding: 30px 0 0 24px;
+  padding: 15px 15px 0 15px;
   text-align: left;
   width: 306px;
   background: #fff;
@@ -631,9 +647,12 @@ export default {
   border-radius: 4px;
   margin-right: 10px;
 }
+.detail:last-child {
+  margin-right: 0;
+}
 .product-img {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border-radius: 2px;
   border: 1px solid #eee;
   display: flex;
@@ -642,6 +661,7 @@ export default {
   margin-bottom: 22px;
 }
 .left-content {
+  width: 56px;
   margin-right: 10px;
 }
 .right-content {

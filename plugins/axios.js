@@ -12,11 +12,11 @@ export default function ({ $axios, redirect, store, error, router, route }) {
   }
 
   $axios.onRequest((config) => {
-    console.log('Making request to ' + config.url)
+    // console.log('Making request to ' + config.url)
   })
 
   $axios.onResponse((res) => {
-    console.log(res)
+    // console.log(res)
   })
   $axios.onError((error) => {
     console.log(error)

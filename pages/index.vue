@@ -1,9 +1,11 @@
 <template>
   <div class="home-page">
-    <a href="https://twitter.com/CryptoGala" class="popularity">
-      <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
+    <div class="popularity">
+      <a href="https://twitter.com/CryptoGala"
+        ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
+      /></a>
       TWITTER
-    </a>
+    </div>
     <div class="having-flex">
       <div v-for="(item, index) in dataList" :key="index" class="having-right">
         <div class="category-name">{{ item.categoryName }}</div>
@@ -23,10 +25,35 @@
               </div>
 
               <div class="right-content">
-                <div class="product-name">{{ it.title }}</div>
-                <div v-if="it.ticker">({{ it.ticker }})</div>
+                <div class="product-name">
+                  {{ it.title }}<span v-if="it.ticker">({{ it.ticker }})</span>
+                </div>
+                <div class="tag-area">
+                  <span>{{ it.tag }}</span>
+                  <!-- <span>{{ it.markets }}</span> -->
+                  <img
+                    v-if="returnIcon('Binance', it.markets)"
+                    class="market-icon"
+                    src="~/assets/img/binance.png"
+                    alt=""
+                  />
+                  <img
+                    v-if="returnIcon('Coinbase Pro', it.markets)"
+                    class="market-icon"
+                    src="~/assets/img/coinbasepro.png"
+                    alt=""
+                  />
+                  <img
+                    v-if="returnIcon('Huobi Global', it.markets)"
+                    class="market-icon"
+                    src="~/assets/img/huobiglobal.png"
+                    alt=""
+                  />
+                </div>
                 <div class="product-id">
-                  <span v-if="it.address">{{ it.address }}</span>
+                  <span v-if="it.address" class="id-width">{{
+                    it.address
+                  }}</span>
                   <img
                     v-if="it.address"
                     class="copy-icon"
@@ -34,7 +61,9 @@
                     @click.stop="cliBoadId(it.address)"
                   />
                 </div>
-                <div class="product-price">total:{{ it.total }}</div>
+                <div class="product-price">
+                  TOTAL:{{ it.total ? it.total : 'NOT SET' }}
+                </div>
                 <div class="product-desc">
                   {{ it.description ? it.description : '' }}
                 </div>
@@ -68,12 +97,12 @@ export default {
     }
     function getListOne() {
       return app.$axios.get(
-        `${baseUrl}/projects?_where[marketCategory]=1_limit=15`
+        `${baseUrl}/projects?_where[marketCategory]=1&_limit=15`
       )
     }
     function getListTwo() {
       return app.$axios.get(
-        `${baseUrl}/projects?_where[marketCategory]=2_limit=15`
+        `${baseUrl}/projects?_where[marketCategory]=2&_limit=15`
       )
     }
     return app.$axios.all([getListZero(), getListOne(), getListTwo()]).then(
@@ -232,6 +261,15 @@ export default {
       this.chooseNumber = randomNumber
       return colorList[randomNumber]
     },
+    returnIcon(test, target) {
+      let targetString = ''
+      for (let i = 0; i < target.length; i++) {
+        targetString += target[i].exchange
+        if (i === target.length - 1 && targetString.includes(test)) {
+          return true
+        }
+      }
+    },
   },
 }
 </script>
@@ -265,6 +303,7 @@ export default {
   align-items: flex-start;
   flex-wrap: wrap;
   cursor: pointer;
+  padding-bottom: 120px;
 }
 .having-right {
   margin-right: 18px;
@@ -316,12 +355,25 @@ export default {
   font-weight: bold;
   margin-bottom: 10px;
 }
+.tag-area {
+  display: flex;
+  align-items: center;
+  height: 14px;
+}
+
 .product-id {
   font-size: 11px;
   font-weight: 300;
+  height: 15px;
   margin: 10px 0 20px;
   display: flex;
   align-items: center;
+}
+.id-width {
+  width: 228px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .copy-icon {
   width: 12px;
@@ -334,11 +386,13 @@ export default {
 }
 .product-desc {
   font-weight: 500;
+  width: 280px;
+  height: 14px;
   line-height: 14px;
   margin-bottom: 30px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   overflow: hidden;
   padding-right: 18px;
 }
@@ -361,5 +415,10 @@ export default {
   width: 5px;
   height: 7px;
   margin-left: 4px;
+}
+.market-icon {
+  width: 16px;
+  height: 16px;
+  margin: 0 0 0 5px;
 }
 </style>

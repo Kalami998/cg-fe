@@ -10,6 +10,7 @@
             type="search"
             placeholder="Search"
             @focus="getFocus"
+            @keyup.enter="searchSome(it)"
           />
           <div v-if="inputByBlur" class="searched-list">
             <div
@@ -66,6 +67,21 @@ export default {
       currentPath: '', // 当前路径
     }
   },
+  watch: {
+    $route() {
+      switch (this.$router.query && this.$router.query.title) {
+        case 'unlisted':
+          this.currentPath = 0
+          break
+        case 'mainlylistedindex':
+          this.currentPath = 1
+          break
+        case 'mainlylistedincex':
+          this.currentPath = 2
+          break
+      }
+    },
+  },
   mounted() {
     // if (this.$router.query) {
     //   switch (this.$router.query.title) {
@@ -82,21 +98,6 @@ export default {
     // } else {
     //   this.currentPath = -1
     // }
-  },
-  watch: {
-    $route() {
-      switch (this.$router.query && this.$router.query.title) {
-        case 'unlisted':
-          this.currentPath = 0
-          break
-        case 'mainlylistedindex':
-          this.currentPath = 1
-          break
-        case 'mainlylistedincex':
-          this.currentPath = 2
-          break
-      }
-    },
   },
   methods: {
     // 去搜索二级页

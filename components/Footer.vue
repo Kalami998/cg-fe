@@ -1,8 +1,19 @@
 <template>
   <div class="footer">
-    <a href="https://t.me/CryptoGalaOffical" class="footer-class">{{
-      infomation
-    }}</a>
+    <div href="https://t.me/CryptoGalaOffical" class="footer-class">
+      Connect Us at Email |
+      <a
+        href="https://twitter.com/CryptoGala"
+        title="https://twitter.com/CryptoGala"
+        >Twitter</a
+      >
+      |
+      <a
+        href="https://t.me/CryptoGalaOffical"
+        title="https://t.me/CryptoGalaOffical"
+        >Telegram Chat</a
+      >
+    </div>
   </div>
 </template>
 
@@ -23,6 +34,7 @@ export default {
   height: 64px;
   line-height: 64px;
   border-top: 1px solid #ddd;
+  text-align: center;
 }
 .footer-class {
   text-align: center;

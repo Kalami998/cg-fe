@@ -1,10 +1,12 @@
 <template>
   <div class="all-page">
     <div class="all-content">
-      <a href="https://twitter.com/CryptoGala" class="popularity">
-        <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
+      <div class="popularity">
+        <a href="https://twitter.com/CryptoGala"
+          ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
+        /></a>
         TWITTER
-      </a>
+      </div>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />
         <span>index</span>
@@ -39,7 +41,9 @@
               </div>
             </td>
             <td class="body-td">{{ item.tag }}</td>
-            <td class="body-td">{{ item.rates[0] ? item.rates[0] : '' }}</td>
+            <td class="body-td">
+              {{ item.icoRate ? item.icoRate : '' }}
+            </td>
             <td class="body-td">{{ item.category }}</td>
             <td class="body-td">
               <div class="having-flex">
@@ -78,7 +82,7 @@ export default {
   asyncData({ app, query }) {
     function getList() {
       return app.$axios.get(
-        `${baseUrl}/projects?_where[marketCategory]=${query.number}`
+        `${baseUrl}/projects?_where[marketCategory]=${query.number}&_limit=15`
       )
     }
     return app.$axios.all([getList()]).then(
@@ -136,6 +140,9 @@ export default {
           tag: 'DIA',
         },
       ],
+      scrollHeight: '滑动高度',
+      keepWatch: false, // 监听
+      pageNum: 15, // 页数
     }
   },
 
@@ -143,17 +150,48 @@ export default {
     window.scrollTo(0, 0)
     switch (this.allTitle) {
       case 'unlisted':
-        this.allTitle = 'Unlisted'
+        this.allTitle = 'UNLISTED'
         break
       case 'mainlylistedinex':
-        this.allTitle = 'Mainly Listed in DEX'
+        this.allTitle = 'MAINLY LISTED IN DEX'
         break
       case 'mainlylistedincex':
-        this.allTitle = 'Mainly Listed in CEX'
+        this.allTitle = 'MAINLY LISTED IN CEX'
         break
     }
+    window.addEventListener('scroll', this.getList, true)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.getList)
   },
   methods: {
+    async getList() {
+      this.scrollHeight =
+        document.body.scrollTop ||
+        document.documentElement.scrollTop ||
+        window.pageYOffset
+      // console.log(window.screen.availHeight, '屏幕高度')
+      // console.log(document.querySelector('.all-main').offsetHeight, '屏幕高度')
+      if (
+        this.scrollHeight * 1.5 >=
+          document.querySelector('.all-main').offsetHeight &&
+        !this.keepWatch
+      ) {
+        const res = await this.$axios.get(
+          `${baseUrl}/projects?_where[marketCategory]=${this.$route.query.number}&_start=${this.pageNum}&_limit=15`
+        )
+
+        if (res.data.length) {
+          this.allList.push.apply(this.allList, res.data)
+        }
+        this.pageNum += 15
+        setTimeout(() => {
+          if (res.data.length < 15) {
+            this.keepWatch = true
+          }
+        }, 5000)
+      }
+    },
     backHome() {
       this.$router.push({
         path: '/',
