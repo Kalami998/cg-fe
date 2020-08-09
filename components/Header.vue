@@ -27,9 +27,22 @@
         </div>
       </div>
       <div class="hot-category">
-        <span class="right-distance">Unlisted</span>
-        <span class="right-distance">Mainly Listed in DEX</span>
-        <span>Mainly Listed in CEX</span>
+        <span
+          :class="{ 'right-distance': true, 'current-title': currentPath == 0 }"
+          @click="goAll('unlisted', 0)"
+          >Unlisted</span
+        >
+        <span
+          :class="{ 'right-distance': true, 'current-title': currentPath == 1 }"
+          @click="goAll('mainlylistedinex', 1)"
+          >Mainly Listed in DEX</span
+        >
+        <span
+          :class="{ 'current-title': currentPath == 2 }"
+          @click="goAll('mainlylistedincex', 2)"
+        >
+          Mainly Listed in CEX</span
+        >
       </div>
     </div>
   </div>
@@ -50,7 +63,40 @@ export default {
         // { name: 'LUKSO' },
       ], // 搜索记录
       inputByBlur: false, // 搜索框是否获取了焦点
+      currentPath: '', // 当前路径
     }
+  },
+  mounted() {
+    // if (this.$router.query) {
+    //   switch (this.$router.query.title) {
+    //     case 'unlisted':
+    //       this.currentPath = 0
+    //       break
+    //     case 'mainlylistedindex':
+    //       this.currentPath = 1
+    //       break
+    //     case 'mainlylistedincex':
+    //       this.currentPath = 2
+    //       break
+    //   }
+    // } else {
+    //   this.currentPath = -1
+    // }
+  },
+  watch: {
+    $route() {
+      switch (this.$router.query && this.$router.query.title) {
+        case 'unlisted':
+          this.currentPath = 0
+          break
+        case 'mainlylistedindex':
+          this.currentPath = 1
+          break
+        case 'mainlylistedincex':
+          this.currentPath = 2
+          break
+      }
+    },
   },
   methods: {
     // 去搜索二级页
@@ -58,7 +104,7 @@ export default {
       this.$router.push({
         path: '/search',
         query: {
-          title: this.target,
+          keyword: this.target,
         },
       })
     },
@@ -67,6 +113,20 @@ export default {
     },
     loseFocus() {
       this.inputByBlur = false
+    },
+    // 去更多页
+    goAll(it, index) {
+      if (location.pathname === '/all') {
+        location.search = `title=${it}&number=${index}`
+      } else {
+        this.$router.push({
+          path: '/all',
+          query: {
+            title: it,
+            number: index,
+          },
+        })
+      }
     },
   },
 }
@@ -151,8 +211,10 @@ export default {
   font-weight: 500;
   cursor: pointer;
 }
-.hot-category span:hover,
-.hot-category span:active {
+.hot-category span:hover {
+  font-weight: bold;
+}
+.current-title {
   font-weight: bold;
 }
 .right-distance {

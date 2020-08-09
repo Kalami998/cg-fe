@@ -1,10 +1,10 @@
 <template>
   <div class="search-page">
     <div class="search-content">
-      <div class="popularity">
+      <a href="https://twitter.com/CryptoGala" class="popularity">
         <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
-        TWITTER [{{ fans }}K]
-      </div>
+        TWITTER
+      </a>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />
         <span>index</span>
@@ -52,10 +52,10 @@
             <td class="body-td">
               <div class="having-flex">
                 <div class="address-area">{{ item.address }}</div>
-                <img
+                <imgs
                   v-if="item.address"
                   src="~assets/img/copy.png"
-                  alt=""
+                  alt
                   class="copy-icon"
                   @click.stop="cliBoadId(item.address)"
                 />
@@ -66,8 +66,13 @@
       </table>
       <div class="back-box">
         <div class="back-line">
-          <span>BACK TO TOP</span>
-          <img class="top-icon" src="~assets/img/top.png" alt="" />
+          <span @click="backTop()">BACK TO TOP</span>
+          <img
+            class="top-icon"
+            src="~assets/img/top.png"
+            alt
+            @click="backTop()"
+          />
         </div>
       </div>
     </div>
@@ -78,87 +83,28 @@
 import { copyFunc } from '~/plugins/copy.js'
 import { baseUrl } from '~/config'
 export default {
-  asyncData({ app, query }) {
-    // function getResult() {
-    //   return app.$axios.get(
-    //     `${baseUrl}/projects?_where[_or][0][title_contains]=${query.title}&_where[_or][1][description_contains]=${query.title}`
-    //   )
-    // }
-    return app.$axios
-      .get(
-        `${baseUrl}/projects?_where[_or][0][title_contains]=${query.title}&_where[_or][1][description_contains]=${query.title}`
-      )
-      .then((res) => {
-        return {
-          searchTitle: query.title,
-          searchList: res.data,
-        }
-      })
+  async asyncData({ $axios, query }) {
+    const { data } = await $axios.get(
+      `${baseUrl}/projects?_where[_or][0][title_contains]=${query.keyword}&_where[_or][1][description_contains]=${query.keyword}`
+    )
+    return {
+      searchList: data,
+    }
   },
   data() {
     return {
       fans: 33.3,
       searchTitle: 'DMM Governance',
-      searchList: [
-        {
-          name: 'DMM Governance Token',
-          img: '',
-          shortname: 'Polkadot',
-          category: 'Defi',
-          isNew: true,
-          address:
-            '4373249324k3jh3984y3924y434373249324k3jh3984y3924y434373249324k3jh3984y3924y434373249324k3jh3984y3924y43',
-          price: '1100',
-          rate: 'high',
-          desc:
-            'Ownership of DMG represents the right to goverasdasd asdjaspd]a',
-          tag: 'DIA',
-        },
-        {
-          name: 'DMM Governance Token',
-          img: '',
-          shortname: 'Polkadot',
-          category: 'Defi',
-          isNew: true,
-          address: '4373249324k3jh3984y3924y43',
-          price: '1100',
-          rate: 'high',
-          desc:
-            'Ownership of DMG represents the right to goverasdasd asdjaspd]a',
-          tag: 'DIA',
-        },
-        {
-          name: 'DMM Governance Token',
-          img: '',
-          shortname: 'Polkadot',
-          category: 'Defi',
-          isNew: true,
-          address: '4373249324k3jh3984y3924y43',
-          price: '1100',
-          rate: 'high',
-          desc:
-            'Ownership of DMG represents the right to goverasdasd asdjaspd]a',
-          tag: 'DIA',
-        },
-      ],
     }
   },
-  mounted() {},
+  mounted() {
+    window.scrollTo(0, 0)
+  },
   methods: {
     backHome() {
       this.$router.push({
         path: '/',
       })
-    },
-    getList() {
-      this.$axios
-        .get(
-          `${baseUrl}/projects?_where[_or][0][title_contains]=${this.$route.query.target}&_where[_or][1][description_contains]=${this.$route.query.target}`
-        )
-        .then((res) => {
-          this.searchList = res.data
-          this.searchTitle = this.$route.query.target
-        })
     },
     // 复制ID
     cliBoadId(id) {
@@ -171,6 +117,9 @@ export default {
           id: item.id,
         },
       })
+    },
+    backTop() {
+      window.scrollTo(0, 0)
     },
   },
 }
@@ -330,6 +279,7 @@ export default {
   align-items: center;
   height: 14px;
   justify-content: center;
+  cursor: pointer;
 }
 .top-icon {
   width: 8px;

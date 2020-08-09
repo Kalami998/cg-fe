@@ -1,10 +1,10 @@
 <template>
   <div class="all-page">
     <div class="all-content">
-      <div class="popularity">
+      <a href="https://twitter.com/CryptoGala" class="popularity">
         <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
-        TWITTER [{{ fans }}K]
-      </div>
+        TWITTER
+      </a>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />
         <span>index</span>
@@ -58,8 +58,13 @@
       </table>
       <div class="back-box">
         <div class="back-line">
-          <span>BACK TO TOP</span>
-          <img class="top-icon" src="~assets/img/top.png" alt="" />
+          <span @click="backTop()">BACK TO TOP</span>
+          <img
+            class="top-icon"
+            src="~assets/img/top.png"
+            alt=""
+            @click="backTop()"
+          />
         </div>
       </div>
     </div>
@@ -133,7 +138,21 @@ export default {
       ],
     }
   },
-  mounted() {},
+
+  mounted() {
+    window.scrollTo(0, 0)
+    switch (this.allTitle) {
+      case 'unlisted':
+        this.allTitle = 'Unlisted'
+        break
+      case 'mainlylistedinex':
+        this.allTitle = 'Mainly Listed in DEX'
+        break
+      case 'mainlylistedincex':
+        this.allTitle = 'Mainly Listed in CEX'
+        break
+    }
+  },
   methods: {
     backHome() {
       this.$router.push({
@@ -151,6 +170,9 @@ export default {
           id: item.id,
         },
       })
+    },
+    backTop() {
+      window.scrollTo(0, 0)
     },
   },
 }
@@ -306,6 +328,7 @@ export default {
   align-items: center;
   justify-content: center;
   height: 14px;
+  cursor: pointer;
 }
 .top-icon {
   width: 8px;

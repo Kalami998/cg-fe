@@ -1,10 +1,10 @@
 <template>
   <div class="detail-page">
     <div class="detail-content">
-      <div class="popularity">
+      <a href="https://twitter.com/CryptoGala" class="popularity">
         <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
-        TWITTER [{{ fans }}K]
-      </div>
+        TWITTER
+      </a>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />
         <span>index</span>
@@ -13,8 +13,18 @@
       <div class="product-main">
         <div class="product-info">
           <div class="left-icon">
-            <!-- <img :src="productInfo.main" alt /> -->
+            <img
+              v-if="
+                productInfo.main.includes('jpeg') ||
+                productInfo.main.includes('jpg') ||
+                productInfo.main.includes('png')
+              "
+              :src="productInfo.main"
+              alt
+              class="img-size"
+            />
             <iframe
+              v-else
               :title="'What is' + productInfo.title + '?'"
               :src="productInfo.main"
               width="564"
@@ -47,6 +57,24 @@
                 >{{ tag }}</span
               >-->
               <span class="tag-style">{{ productInfo.tag }}</span>
+              <img
+                v-if="marketString.includes('Binance')"
+                class="market-icon"
+                src="~/assets/img/binance.png"
+                alt=""
+              />
+              <img
+                v-if="marketString.includes('Coinbase Pro')"
+                class="market-icon"
+                src="~/assets/img/coinbasepro.png"
+                alt=""
+              />
+              <img
+                v-if="marketString.includes('Huobi Global')"
+                class="market-icon"
+                src="~/assets/img/huobiglobal.png"
+                alt=""
+              />
             </div>
 
             <div class="brief">{{ productInfo.description }}</div>
@@ -83,7 +111,7 @@
             <div class="small-section">TOKEN</div>
             <div>
               symbol:
-              <ticker class="strong-desc">{{ productInfo.ticker }}</ticker>
+              <span class="strong-desc">{{ productInfo.ticker }}</span>
             </div>
             <div>
               total:
@@ -134,22 +162,22 @@
         <div class="rate-style">
           <div class="small-section">RATING</div>
           <div
-            v-for="(item, index) in productInfo.rate"
+            v-for="(item, index) in productInfo.rates"
             :key="index"
             class="box-style"
           >
             <p>
-              {{ item ? item : 'Hype rate' }}
+              {{ item }}
             </p>
-            <p class="show-desc">
+            <!-- <p class="show-desc">
               {{ productInfo.icoRate ? productInfo.icoRate : 'very high' }}
-            </p>
+            </p> -->
           </div>
         </div>
 
         <div class="divi-line"></div>
 
-        <div class="rate-style">
+        <div v-if="productInfo.events" class="rate-style">
           <div class="small-section">IMPORTANT EVENTS</div>
           <div v-for="(item, index) in timeline" :key="index">
             <div class="line-style">
@@ -161,26 +189,36 @@
           </div>
         </div>
 
-        <div class="divi-line"></div>
+        <!-- <div class="divi-line"></div> -->
 
         <div>
-          <div class="small-section">SCREENSHOTS</div>
+          <div class="small-section">COLLECTIONVIEW</div>
           <div class="other-product">
-            <div v-for="(it, sort) in list" :key="sort">
+            <div v-for="(it, sort) in showList" :key="sort">
               <div class="detail">
                 <div class="left-content">
                   <!-- {{ it.img ? it.img : '' }} -->
                   <div class="product-img">
-                    <img src="~assets/img/search.png" alt />
+                    <img :src="it.logo" alt />
                   </div>
-                  <span>{{ it.pop }}</span>
+                  <span v-if="it.icoRate">{{ it.icoRate }}</span>
                 </div>
 
                 <div class="right-content">
-                  <div class="product-name">{{ it.name }}</div>
-                  <div>{{ it.type }}</div>
-                  <div class="product-id">{{ it.id }}</div>
-                  <div class="product-price">GOAL:${{ it.price }}</div>
+                  <div class="product-name">{{ it.title }}</div>
+                  <div v-if="it.ticker">{{ it.ticker }}</div>
+                  <div class="product-id">
+                    <span v-if="it.address" class="id-width">{{
+                      it.address
+                    }}</span>
+                    <img
+                      v-if="it.address"
+                      class="copy-product"
+                      src="~assets/img/copy.png"
+                      @click.stop="cliBoadId(it.address)"
+                    />
+                  </div>
+                  <div class="product-price">total:{{ it.total }}</div>
                   <div class="product-desc">{{ it.desc ? it.desc : '' }}</div>
                 </div>
               </div>
@@ -206,26 +244,7 @@ export default {
   data() {
     return {
       fans: 33.3,
-      list: [
-        {
-          img: '',
-          type: ['Exchange', 'Defi'],
-          name: 'polkadot',
-          id: '4373249324k3jh3984y3924y43',
-          price: '1100',
-          pop: 'high',
-          desc: 'Huobi goes live on August 3',
-        },
-        {
-          img: '',
-          type: ['Exchange'],
-          name: 'polkadot',
-          id: '4373249324k3jh3984y3924y43',
-          price: '1100',
-          pop: 'high',
-          desc: '',
-        },
-      ],
+      showList: '', // 底部展示产品
       timeline: [
         { time: '2020/08/03', desc: 'list on houbi' },
         { time: '2020/08/03', desc: 'list on houbi' },
@@ -300,9 +319,20 @@ export default {
           },
         ],
       },
+      marketString: [],
     }
   },
-  mounted() {},
+  mounted() {
+    window.scrollTo(0, 0)
+    if (this.productInfo.markets.length) {
+      this.productInfo.markets.filter((item, index) => {
+        if (item.exchange) {
+          this.marketString.push(item.exchange)
+        }
+      })
+    }
+    this.getListOne()
+  },
   methods: {
     backHome() {
       this.$router.push({
@@ -331,6 +361,33 @@ export default {
     // 复制ID
     cliBoadId(id) {
       copyFunc(id)
+    },
+    getListOne() {
+      this.showList = []
+      this.$axios
+        .get(`${baseUrl}/projects?_where[marketCategory]=1`)
+        .then((res) => {
+          if (res.data.length > 0) {
+            for (let i = 0; i < res.data.length; i++) {
+              if (res.data[i].id !== this.productInfo.id) {
+                this.showList.push(res.data[i])
+              }
+              if (this.showList.length > 2) {
+                // 取三个就行
+                return
+              }
+            }
+            // res.data.filter((item, index) => {
+            //   if (item.id !== this.productInfo.id) {
+            //     this.showList.push(item)
+            //   }
+            //   if (this.showList.length > 2) {
+            //     // 取三个就行
+            //     return
+            //   }
+            // })
+          }
+        })
     },
   },
 }
@@ -377,14 +434,13 @@ export default {
   display: flex;
   flex-wrap: wrap;
   padding-left: 42px;
+  align-items: center;
 }
 .tag-style {
-  margin: 0 10px 10px 0;
-  padding-right: 10px;
-  border-right: 1px solid rgba(221, 221, 221, 1);
+  margin: 0 10px 10px 0; /* padding-right: 10px; */ /* border-right: 1px solid rgba(221, 221, 221, 1); */
 }
 .tag-style:last-child {
-  border-right: none;
+  border: none;
   padding-right: none;
 }
 .product-main {
@@ -403,7 +459,7 @@ export default {
   height: 340px;
   margin-right: 20px;
 }
-.video-size {
+.img-size {
   width: 564px;
   height: 340px;
 }
@@ -573,7 +629,7 @@ export default {
   background: #fff;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.04);
   border-radius: 4px;
-  margin-left: 10px;
+  margin-right: 10px;
 }
 .product-img {
   width: 64px;
@@ -605,13 +661,15 @@ export default {
   display: flex;
   align-items: center;
 }
-.product-id::after {
-  content: '';
-  width: 8.2px;
-  height: 8.2px;
-  background: url('~assets/img/copy.png') no-repeat;
-  background-size: 100% 100%;
-  display: block;
+.id-width {
+  width: 168px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.copy-product {
+  width: 12px;
+  height: 12px;
   margin-left: 5px;
 }
 .product-price {
@@ -622,5 +680,13 @@ export default {
   font-weight: 500;
   height: 30px;
   margin-bottom: 14px;
+}
+.vp-center {
+  align-items: flex-start !important;
+}
+.market-icon {
+  width: 16px;
+  height: 16px;
+  margin: 0 10px 10px 5px;
 }
 </style>

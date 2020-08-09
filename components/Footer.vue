@@ -1,6 +1,8 @@
 <template>
   <div class="footer">
-    <div class="footer-class">{{ infomation }}</div>
+    <a href="https://t.me/CryptoGalaOffical" class="footer-class">{{
+      infomation
+    }}</a>
   </div>
 </template>
 

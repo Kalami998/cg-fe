@@ -1,14 +1,18 @@
 <template>
   <div class="home-page">
-    <div class="popularity">
+    <a href="https://twitter.com/CryptoGala" class="popularity">
       <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
-      TWITTER [{{ fans }}K]
-    </div>
+      TWITTER
+    </a>
     <div class="having-flex">
       <div v-for="(item, index) in dataList" :key="index" class="having-right">
         <div class="category-name">{{ item.categoryName }}</div>
-        <div class="it-content" @click="goDetail(item)">
-          <div v-for="(it, sort) in item.list" :key="sort">
+        <div class="it-content">
+          <div
+            v-for="(it, sort) in item.list"
+            :key="sort"
+            @click="goDetail(it)"
+          >
             <div class="detail">
               <div class="left-content">
                 <!-- {{ it.img ? it.img : '' }} -->
@@ -30,7 +34,7 @@
                     @click.stop="cliBoadId(it.address)"
                   />
                 </div>
-                <div class="product-price">GOAL:${{ it.total }}</div>
+                <div class="product-price">total:{{ it.total }}</div>
                 <div class="product-desc">
                   {{ it.description ? it.description : '' }}
                 </div>
@@ -41,7 +45,7 @@
           <div
             v-if="item.list.length"
             class="show-more"
-            @click.stop="goMore(item, index)"
+            @click.stop="goAll(item, index)"
           >
             <span>VIEW ALL</span>
             <img class="more-icon" src="~assets/img/more.png" alt />
@@ -58,13 +62,19 @@ import { baseUrl } from '~/config'
 export default {
   asyncData({ app }) {
     function getListZero() {
-      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=0`)
+      return app.$axios.get(
+        `${baseUrl}/projects?_where[marketCategory]=0&_limit=15`
+      )
     }
     function getListOne() {
-      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=1`)
+      return app.$axios.get(
+        `${baseUrl}/projects?_where[marketCategory]=1_limit=15`
+      )
     }
     function getListTwo() {
-      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=2`)
+      return app.$axios.get(
+        `${baseUrl}/projects?_where[marketCategory]=2_limit=15`
+      )
     }
     return app.$axios.all([getListZero(), getListOne(), getListTwo()]).then(
       app.$axios.spread((res, reh, rek) => {
@@ -176,20 +186,23 @@ export default {
   //     list: data,
   //   }
   // },
-  mounted() {},
+  mounted() {
+    window.scrollTo(0, 0)
+  },
   methods: {
     // 去详情页
-    goDetail(item) {
+    goDetail(it) {
+      // console.log('详情数据', it)
       this.$router.push({
         path: '/detail',
         query: {
-          id: item.id,
+          id: it.id,
         },
       })
     },
 
     // 去更多页
-    goMore(it, index) {
+    goAll(it, index) {
       this.$router.push({
         path: '/all',
         query: {
