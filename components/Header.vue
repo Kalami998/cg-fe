@@ -42,12 +42,12 @@ export default {
     return {
       target: '', // 搜索目标
       searchList: [
-        {
-          name:
-            'PolkadotRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic Note',
-        },
-        { name: 'Republic Note' },
-        { name: 'LUKSO' },
+        // {
+        //   name:
+        //     'PolkadotRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic NoteRepublic Note',
+        // },
+        // { name: 'Republic Note' },
+        // { name: 'LUKSO' },
       ], // 搜索记录
       inputByBlur: false, // 搜索框是否获取了焦点
     }

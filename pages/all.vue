@@ -21,26 +21,36 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in allList" :key="index">
+          <tr
+            v-for="(item, index) in allList"
+            :key="index"
+            @click="goDetail(item)"
+          >
             <td class="body-td">
               <div class="product-img">
-                <img src="~assets/img/more.png" alt />
+                <img :src="item.logo" alt />
               </div>
               <div>
                 <div class="having-bottom">
-                  <span class="product-name">{{ item.name }}</span>
+                  <span class="product-name">{{ item.title }}</span>
                   <span v-if="item.ticker">({{ item.ticker }})</span>
                 </div>
-                <div class="product-desc">{{ item.desc }}</div>
+                <div class="product-desc">{{ item.description }}</div>
               </div>
             </td>
             <td class="body-td">{{ item.tag }}</td>
-            <td class="body-td">{{ item.rate }}</td>
+            <td class="body-td">{{ item.rates[0] ? item.rates[0] : '' }}</td>
             <td class="body-td">{{ item.category }}</td>
             <td class="body-td">
               <div class="having-flex">
                 <div class="address-area">{{ item.address }}</div>
-                <img src="~assets/img/copy.png" alt="" class="copy-icon" />
+                <img
+                  v-if="item.address"
+                  src="~assets/img/copy.png"
+                  alt=""
+                  class="copy-icon"
+                  @click.stop="cliBoadId(item.address)"
+                />
               </div>
             </td>
           </tr>
@@ -57,8 +67,24 @@
 </template>
 
 <script>
+import { copyFunc } from '~/plugins/copy.js'
 import { baseUrl } from '~/config'
 export default {
+  asyncData({ app, query }) {
+    function getList() {
+      return app.$axios.get(
+        `${baseUrl}/projects?_where[marketCategory]=${query.number}`
+      )
+    }
+    return app.$axios.all([getList()]).then(
+      app.$axios.spread((res) => {
+        return {
+          allList: res.data,
+          allTitle: query.title,
+        }
+      })
+    )
+  },
   data() {
     return {
       fans: 33.3,
@@ -107,25 +133,23 @@ export default {
       ],
     }
   },
-  asyncData({ app, query }) {
-    function getList() {
-      return app.$axios.get(
-        `${baseUrl}/projects?_where[marketCategory]=${query.type}`
-      )
-    }
-    return app.$axios.all([getList()]).then(
-      app.$axios.spread((res) => {
-        return {
-          searchList: res,
-          searchTitle: query.type,
-        }
-      })
-    )
-  },
+  mounted() {},
   methods: {
     backHome() {
       this.$router.push({
         path: '/',
+      })
+    },
+    // 复制ID
+    cliBoadId(id) {
+      copyFunc(id)
+    },
+    goDetail(item) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id: item.id,
+        },
       })
     },
   },
@@ -204,6 +228,7 @@ export default {
 .body-td {
   background: #fff;
   padding: 24px 0;
+  cursor: pointer;
 }
 .having-flex {
   display: flex;
@@ -219,6 +244,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  cursor: pointer;
 }
 .address-area {
   max-width: 296px;

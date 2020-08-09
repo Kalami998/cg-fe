@@ -13,12 +13,16 @@
       <div class="product-main">
         <div class="product-info">
           <div class="left-icon">
-            <img :src="productInfo.main" alt />
-            <!-- <video
+            <!-- <img :src="productInfo.main" alt /> -->
+            <iframe
+              :title="'What is' + productInfo.title + '?'"
               :src="productInfo.main"
-              controls="controls"
-              class="video-size"
-            ></video> -->
+              width="564"
+              height="340"
+              frameborder="0"
+              allow="autoplay; fullscreen"
+              allowfullscreen=""
+            ></iframe>
           </div>
 
           <div class="right-info">
@@ -96,8 +100,8 @@
                 v-if="productInfo.address"
                 class="copy-icon"
                 src="~assets/img/copy.png"
-                @click="cliBoadId(productInfo.address)"
                 alt=""
+                @click="cliBoadId(productInfo.address)"
               />
             </div>
             <!-- <div>
@@ -192,6 +196,13 @@
 import { baseUrl } from '~/config'
 import { copyFunc } from '~/plugins/copy.js'
 export default {
+  asyncData({ $axios, app, query }) {
+    return app.$axios.get(`${baseUrl}/projects/${query.id}`).then((res) => {
+      return {
+        productInfo: res.data,
+      }
+    })
+  },
   data() {
     return {
       fans: 33.3,
@@ -291,17 +302,7 @@ export default {
       },
     }
   },
-  // asyncData({ $axios, app, query }) {
-  //   return app.$axios.get(`${baseUrl}/projects/${query.id}`).then((res) => {
-  //     return {
-  //       productInfo: res.data,
-  //     }
-  //   })
-  // },
-  mounted() {
-    console.log('返回数据', this.productInfo)
-    this.getInfo()
-  },
+  mounted() {},
   methods: {
     backHome() {
       this.$router.push({
@@ -312,7 +313,6 @@ export default {
       return `/img/${item}.png`
     },
     goItem(url) {
-      console.log('跳转路径', url)
       if (url) {
         location.href = url
       } else {
@@ -325,7 +325,6 @@ export default {
           if (res) {
             this.productInfo = res.data
           } else {
-            console.log('got error')
           }
         })
     },
@@ -415,6 +414,7 @@ export default {
 .demo-icon {
   width: 25px;
   height: 25px;
+  border: 1px solid rgba(221, 221, 221, 1);
 }
 .it-name {
   font-size: 24px;
@@ -422,6 +422,7 @@ export default {
 }
 .symbol-desc {
   font-size: 20px;
+  margin-left: 5px;
 }
 .having-bottom {
   margin-bottom: 16px;

@@ -7,35 +7,42 @@
     <div class="having-flex">
       <div v-for="(item, index) in dataList" :key="index" class="having-right">
         <div class="category-name">{{ item.categoryName }}</div>
-        <div class="it-content" @click="goDetail(it)">
+        <div class="it-content" @click="goDetail(item)">
           <div v-for="(it, sort) in item.list" :key="sort">
             <div class="detail">
               <div class="left-content">
                 <!-- {{ it.img ? it.img : '' }} -->
                 <div class="product-img">
-                  <img src="~assets/img/search.png" alt />
+                  <img :src="it.logo" alt />
                 </div>
-                <span>{{ it.pop }}</span>
+                <span v-if="it.icoRate">{{ it.icoRate }}</span>
               </div>
 
               <div class="right-content">
-                <div class="product-name">{{ it.name }}</div>
-                <div>{{ it.type }}</div>
+                <div class="product-name">{{ it.title }}</div>
+                <div v-if="it.ticker">({{ it.ticker }})</div>
                 <div class="product-id">
-                  {{ it.id }}
+                  <span v-if="it.address">{{ it.address }}</span>
                   <img
+                    v-if="it.address"
                     class="copy-icon"
                     src="~assets/img/copy.png"
-                    @click.stop="cliBoadId(it.id)"
+                    @click.stop="cliBoadId(it.address)"
                   />
                 </div>
-                <div class="product-price">GOAL:${{ it.price }}</div>
-                <div class="product-desc">{{ it.desc ? it.desc : '' }}</div>
+                <div class="product-price">GOAL:${{ it.total }}</div>
+                <div class="product-desc">
+                  {{ it.description ? it.description : '' }}
+                </div>
               </div>
             </div>
             <div class="divi-line"></div>
           </div>
-          <div class="show-more" @click="goMore(item)">
+          <div
+            v-if="item.list.length"
+            class="show-more"
+            @click.stop="goMore(item, index)"
+          >
             <span>VIEW ALL</span>
             <img class="more-icon" src="~assets/img/more.png" alt />
           </div>
@@ -69,9 +76,16 @@ export default {
         rehData = reh.data
         rekData = rek.data
         list.push({
-          resData,
-          rehData,
-          rekData,
+          categoryName: 'UNLISTED',
+          list: resData,
+        })
+        list.push({
+          categoryName: 'MAINLY LISTED IN DEX',
+          list: rehData,
+        })
+        list.push({
+          categoryName: 'MANILY LISTED IN CEX',
+          list: rekData,
         })
         return {
           dataList: list,
@@ -153,6 +167,7 @@ export default {
           ],
         },
       ],
+      chooseNumber: '',
     }
   },
   // async asyncData({ $axios }) {
@@ -161,26 +176,25 @@ export default {
   //     list: data,
   //   }
   // },
-  mounted() {
-    console.log(this.dataList, '数据列表')
-  },
+  mounted() {},
   methods: {
     // 去详情页
-    goDetail(it) {
+    goDetail(item) {
       this.$router.push({
         path: '/detail',
         query: {
-          id: 1,
+          id: item.id,
         },
       })
     },
 
     // 去更多页
-    goMore(it) {
+    goMore(it, index) {
       this.$router.push({
-        path: '/more',
+        path: '/all',
         query: {
-          type: it.title,
+          title: it.categoryName,
+          number: index,
         },
       })
     },
@@ -188,6 +202,22 @@ export default {
     // 复制ID
     cliBoadId(id) {
       copyFunc(id)
+    },
+
+    // 随机色
+    randomColor() {
+      const colorList = [
+        'color: rgba(2,142,233,1)',
+        'color: rgba(222,0,27,1)',
+        'color:rgba(0, 0, 0, 1)',
+      ]
+      let randomNumber = Math.floor(Math.random() * 3 + 1) - 1
+      if (this.chooseNumber && randomNumber === this.chooseNumber) {
+        randomNumber =
+          this.chooseNumber - 1 >= 0 ? this.chooseNumber : this.chooseNumber + 1
+      }
+      this.chooseNumber = randomNumber
+      return colorList[randomNumber]
     },
   },
 }
@@ -291,8 +321,13 @@ export default {
 }
 .product-desc {
   font-weight: 500;
-  height: 30px;
+  line-height: 14px;
   margin-bottom: 30px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  padding-right: 18px;
 }
 .divi-line {
   height: 1px;

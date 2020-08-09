@@ -21,13 +21,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in searchList" :key="index">
+          <tr
+            v-for="(item, index) in searchList"
+            :key="index"
+            @click="goDetail(item)"
+          >
             <td class="body-td">
               <div class="product-img">
                 <!-- <img src="~assets/img/search.png" alt /> -->
                 <img
-                  v-if="item.main"
-                  :src="item.main"
+                  v-if="item.logo"
+                  :src="item.logo"
                   alt=""
                   class="product-icon"
                 />
@@ -41,7 +45,9 @@
               </div>
             </td>
             <td class="body-td">{{ item.tag }}</td>
-            <td class="body-td">{{ item.rate }}</td>
+            <td class="body-td">
+              {{ item.rates.length ? item.rates[0] : '' }}
+            </td>
             <td class="body-td">{{ item.category }}</td>
             <td class="body-td">
               <div class="having-flex">
@@ -51,7 +57,7 @@
                   src="~assets/img/copy.png"
                   alt=""
                   class="copy-icon"
-                  @click="cliBoadId(item.address)"
+                  @click.stop="cliBoadId(item.address)"
                 />
               </div>
             </td>
@@ -72,6 +78,23 @@
 import { copyFunc } from '~/plugins/copy.js'
 import { baseUrl } from '~/config'
 export default {
+  asyncData({ app, query }) {
+    // function getResult() {
+    //   return app.$axios.get(
+    //     `${baseUrl}/projects?_where[_or][0][title_contains]=${query.title}&_where[_or][1][description_contains]=${query.title}`
+    //   )
+    // }
+    return app.$axios
+      .get(
+        `${baseUrl}/projects?_where[_or][0][title_contains]=${query.title}&_where[_or][1][description_contains]=${query.title}`
+      )
+      .then((res) => {
+        return {
+          searchTitle: query.title,
+          searchList: res.data,
+        }
+      })
+  },
   data() {
     return {
       fans: 33.3,
@@ -120,24 +143,7 @@ export default {
       ],
     }
   },
-  // asyncData({ app, query }) {
-  //   function getResult() {
-  //     return app.$axios.get(
-  //       `${baseUrl}/projects?_where[_or][0][title_contains]=${query.target}&_where[_or][1][description_contains]=${query.target}`
-  //     )
-  //   }
-  //   return app.$axios.all([getResult()]).then(
-  //     app.$axios.spread((res) => {
-  //       return {
-  //         searchList: res,
-  //         searchTitle: query.type,
-  //       }
-  //     })
-  //   )
-  // },
-  mounted() {
-    this.getList()
-  },
+  mounted() {},
   methods: {
     backHome() {
       this.$router.push({
@@ -157,6 +163,14 @@ export default {
     // 复制ID
     cliBoadId(id) {
       copyFunc(id)
+    },
+    goDetail(item) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id: item.id,
+        },
+      })
     },
   },
 }
@@ -234,6 +248,7 @@ export default {
 .body-td {
   background: #fff;
   padding: 24px 0;
+  cursor: pointer;
 }
 .having-flex {
   display: flex;
@@ -249,6 +264,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  cursor: pointer;
 }
 .address-area {
   max-width: 296px;
