@@ -23,7 +23,6 @@
                 <div>{{ it.type }}</div>
                 <div class="product-id">
                   {{ it.id }}
-
                   <img
                     class="copy-icon"
                     src="~assets/img/copy.png"
@@ -126,23 +125,11 @@ export default {
       ],
     }
   },
-  asyncData({ app }) {
-    function getListZero() {
-      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=0`)
+  async asyncData({ $axios }) {
+    const { data } = await $axios.get(`${baseUrl}/projects?_where[id]=50`)
+    return {
+      list: data,
     }
-    // function getListOne() {
-    //   return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=1`)
-    // }
-    // function getListTwo() {
-    //   return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=2`)
-    // }
-    return app.$axios.all([getListZero()]).then(
-      app.$axios.spread((res) => {
-        return {
-          dataList: res,
-        }
-      })
-    )
   },
   mounted() {
     console.log(this.dataList, '數據列表')
