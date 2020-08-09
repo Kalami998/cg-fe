@@ -7,6 +7,7 @@
           <input
             class="input-style"
             type="search"
+            v-model="target"
             placeholder="Search"
             @focus="getFocus"
             @mouseover="getFocus"
@@ -16,6 +17,7 @@
               v-for="(item, index) in searchList"
               :key="index"
               class="list-data"
+              @click="searchSome(it)"
             >
               {{ item.name }}
             </div>
@@ -39,7 +41,7 @@ export default {
   // name: 'Header',
   data() {
     return {
-      hot: [],
+      target: '', // 搜索目标
       searchList: [
         {
           name:
@@ -52,8 +54,14 @@ export default {
     }
   },
   methods: {
-    searchSome() {
-      console.log('what are you？')
+    // 去搜索二级页
+    searchSome(it) {
+      this.$router.push({
+        path: '/search',
+        query: {
+          title: this.target,
+        },
+      })
     },
     getFocus() {
       this.inputByBlur = true

@@ -21,14 +21,22 @@
               <div class="right-content">
                 <div class="product-name">{{ it.name }}</div>
                 <div>{{ it.type }}</div>
-                <div class="product-id">{{ it.id }}</div>
+                <div class="product-id">
+                  {{ it.id }}
+
+                  <img
+                    class="copy-icon"
+                    src="~assets/img/copy.png"
+                    @click.stop="cliBoadId(it.id)"
+                  />
+                </div>
                 <div class="product-price">GOAL:${{ it.price }}</div>
                 <div class="product-desc">{{ it.desc ? it.desc : '' }}</div>
               </div>
             </div>
             <div class="divi-line"></div>
           </div>
-          <div class="show-more">
+          <div class="show-more" @click="goMore(item)">
             <span>VIEW ALL</span>
             <img class="more-icon" src="~assets/img/more.png" alt />
           </div>
@@ -39,6 +47,8 @@
 </template>
 
 <script>
+import { copyFunc } from '~/plugins/copy.js'
+import { baseUrl } from '~/config'
 export default {
   data() {
     return {
@@ -116,12 +126,51 @@ export default {
       ],
     }
   },
-  mounted() {},
+  asyncData({ app }) {
+    function getListZero() {
+      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=0`)
+    }
+    // function getListOne() {
+    //   return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=1`)
+    // }
+    // function getListTwo() {
+    //   return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=2`)
+    // }
+    return app.$axios.all([getListZero()]).then(
+      app.$axios.spread((res) => {
+        return {
+          dataList: res,
+        }
+      })
+    )
+  },
+  mounted() {
+    console.log(this.dataList, '數據列表')
+  },
   methods: {
+    // 去详情页
     goDetail(it) {
       this.$router.push({
         path: '/detail',
+        query: {
+          id: 1,
+        },
       })
+    },
+
+    // 去更多页
+    goMore(it) {
+      this.$router.push({
+        path: '/more',
+        query: {
+          type: it.title,
+        },
+      })
+    },
+
+    // 复制ID
+    cliBoadId(id) {
+      copyFunc(id)
     },
   },
 }
@@ -214,13 +263,9 @@ export default {
   display: flex;
   align-items: center;
 }
-.product-id::after {
-  content: '';
-  width: 8.2px;
-  height: 8.2px;
-  background: url('~assets/img/copy.png') no-repeat;
-  background-size: 100% 100%;
-  display: block;
+.copy-icon {
+  width: 12px;
+  height: 12px;
   margin-left: 5px;
 }
 .product-price {

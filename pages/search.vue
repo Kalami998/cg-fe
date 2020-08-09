@@ -24,14 +24,20 @@
           <tr v-for="(item, index) in searchList" :key="index">
             <td class="body-td">
               <div class="product-img">
-                <img src="~assets/img/search.png" alt />
+                <!-- <img src="~assets/img/search.png" alt /> -->
+                <img
+                  v-if="item.main"
+                  :src="item.main"
+                  alt=""
+                  class="product-icon"
+                />
               </div>
               <div>
                 <div class="having-bottom">
-                  <span class="product-name">{{ item.name }}</span
+                  <span class="product-name">{{ item.title }}</span
                   >({{ item.shortname }})
                 </div>
-                <div class="product-desc">{{ item.desc }}</div>
+                <div class="product-desc">{{ item.description }}</div>
               </div>
             </td>
             <td class="body-td">{{ item.tag }}</td>
@@ -40,7 +46,13 @@
             <td class="body-td">
               <div class="having-flex">
                 <div class="address-area">{{ item.address }}</div>
-                <img src="~assets/img/copy.png" alt="" class="copy-icon" />
+                <img
+                  v-if="item.address"
+                  src="~assets/img/copy.png"
+                  alt=""
+                  class="copy-icon"
+                  @click="cliBoadId(item.address)"
+                />
               </div>
             </td>
           </tr>
@@ -57,6 +69,8 @@
 </template>
 
 <script>
+import { copyFunc } from '~/plugins/copy.js'
+import { baseUrl } from '~/config'
 export default {
   data() {
     return {
@@ -106,11 +120,43 @@ export default {
       ],
     }
   },
+  // asyncData({ app, query }) {
+  //   function getResult() {
+  //     return app.$axios.get(
+  //       `${baseUrl}/projects?_where[_or][0][title_contains]=${query.target}&_where[_or][1][description_contains]=${query.target}`
+  //     )
+  //   }
+  //   return app.$axios.all([getResult()]).then(
+  //     app.$axios.spread((res) => {
+  //       return {
+  //         searchList: res,
+  //         searchTitle: query.type,
+  //       }
+  //     })
+  //   )
+  // },
+  mounted() {
+    this.getList()
+  },
   methods: {
     backHome() {
       this.$router.push({
         path: '/',
       })
+    },
+    getList() {
+      this.$axios
+        .get(
+          `${baseUrl}/projects?_where[_or][0][title_contains]=${this.$route.query.target}&_where[_or][1][description_contains]=${this.$route.query.target}`
+        )
+        .then((res) => {
+          this.searchList = res.data
+          this.searchTitle = this.$route.query.target
+        })
+    },
+    // 复制ID
+    cliBoadId(id) {
+      copyFunc(id)
     },
   },
 }
@@ -231,6 +277,10 @@ export default {
   justify-content: center;
   margin-right: 10px;
   float: left;
+}
+.product-icon {
+  width: 48px;
+  height: 48px;
 }
 .having-bottom {
   margin-bottom: 10px;

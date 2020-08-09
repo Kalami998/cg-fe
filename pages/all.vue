@@ -1,6 +1,6 @@
 <template>
-  <div class="more-page">
-    <div class="more-content">
+  <div class="all-page">
+    <div class="all-content">
       <div class="popularity">
         <img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt />
         TWITTER [{{ fans }}K]
@@ -9,8 +9,8 @@
         <img class="back-icon" src="~assets/img/back.png" alt />
         <span>index</span>
       </div>
-      <div class="more-title">{{ moreTitle }}</div>
-      <table class="more-main">
+      <div class="all-title">{{ allTitle }}</div>
+      <table class="all-main">
         <thead>
           <tr class="table-head" style="border-top: none;">
             <td style="width: 42%;">PROJECT</td>
@@ -21,7 +21,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in moreList" :key="index">
+          <tr v-for="(item, index) in allList" :key="index">
             <td class="body-td">
               <div class="product-img">
                 <img src="~assets/img/more.png" alt />
@@ -57,12 +57,13 @@
 </template>
 
 <script>
+import { baseUrl } from '~/config'
 export default {
   data() {
     return {
       fans: 33.3,
-      moreTitle: 'ACTIVE ICO',
-      moreList: [
+      allTitle: 'ACTIVE ICO',
+      allList: [
         {
           name: 'DMM Governance Token',
           img: '',
@@ -106,6 +107,21 @@ export default {
       ],
     }
   },
+  asyncData({ app, query }) {
+    function getList() {
+      return app.$axios.get(
+        `${baseUrl}/projects?_where[marketCategory]=${query.type}`
+      )
+    }
+    return app.$axios.all([getList()]).then(
+      app.$axios.spread((res) => {
+        return {
+          searchList: res,
+          searchTitle: query.type,
+        }
+      })
+    )
+  },
   methods: {
     backHome() {
       this.$router.push({
@@ -116,11 +132,11 @@ export default {
 }
 </script>
 <style scoped>
-.more-page {
+.all-page {
   min-height: 100vh;
   background: #fafafa;
 }
-.more-content {
+.all-content {
   width: 1200px;
   margin: 10px auto 0 auto;
   font-size: 14px;
@@ -151,14 +167,14 @@ export default {
   width: 12px;
   height: 12px;
 }
-.more-title {
+.all-title {
   font-size: 22px;
   height: 24px;
   line-height: 24px;
   margin-bottom: 20px;
   font-weight: 600;
 }
-.more-main {
+.all-main {
   width: 1200px;
   padding: 0 26px;
   background: #fff;
