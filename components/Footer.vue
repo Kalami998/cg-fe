@@ -9,8 +9,7 @@ export default {
   // name: 'Footer',
   data() {
     return {
-      infomation:
-        '©2020 Baidu (京)-经营性-2017-0020京公网安备xxxxxxxxxxx号京ICP证030173号',
+      infomation: 'Connect Us at Email | Twitter | Telegram Chat',
     }
   },
 }

@@ -13,7 +13,12 @@
       <div class="product-main">
         <div class="product-info">
           <div class="left-icon">
-            <img src="~assets/img/demo.png" alt />
+            <!-- <img src="~assets/img/demo.png" alt /> -->
+            <video
+              :src="productInfo.main"
+              controls="controls"
+              class="video-size"
+            ></video>
           </div>
 
           <div class="right-info">
@@ -21,10 +26,8 @@
               <div class="img-area">
                 <img class="demo-icon" src="~assets/img/demo.png" alt />
               </div>
-              <span class="it-name"
-                >{{ productInfo.title }}
-                <span class="symbol-desc">{{ productInfo.symbol }}</span></span
-              >
+              <span class="it-name">{{ productInfo.title }}</span>
+              <span class="symbol-desc">({{ productInfo.category }})</span>
             </div>
 
             <div class="tag-area">
@@ -33,8 +36,8 @@
                 :key="index"
                 class="tag-style"
                 >{{ tag }}</span
-              > -->
-              <span class="tag-style">{{ productInfo.category }}</span>
+              >-->
+              <span class="tag-style">{{ productInfo.tag }}</span>
             </div>
 
             <div class="brief">{{ productInfo.description }}</div>
@@ -44,7 +47,7 @@
                 v-for="(item, index) in productInfo.socials"
                 :key="index"
                 :src="returnRoute(item.text)"
-                alt=""
+                alt
                 class="icon-size"
                 @click="goItem(item.url)"
               />
@@ -53,12 +56,12 @@
             <div class="btn-area">
               <div
                 class="dosome-btn btn-right"
-                @click="goItem(producInfo.website)"
+                @click="goItem(productInfo.website)"
               >
-                WEBSITE
+                <span>WEBSITE</span>
               </div>
-              <div class="dosome-btn" @click="goItem(producInfo.whitepaper)">
-                WHITEPAPAER
+              <div class="dosome-btn" @click="goItem(productInfo.whitepaper)">
+                <span>WHITEPAPAER</span>
               </div>
             </div>
           </div>
@@ -68,10 +71,10 @@
 
         <div class="param-detail">
           <div class="left-param">
-            <div class="small-section">{{ productInfo.place }}</div>
+            <div class="small-section">TOKEN</div>
             <div>
               symbol:
-              <span class="strong-desc">{{ productInfo.symbol }}</span>
+              <span class="strong-desc">{{ productInfo.ticker }}</span>
             </div>
             <div>
               total:
@@ -79,23 +82,28 @@
             </div>
             <div>
               base:
-              <span class="strong-desc">{{ productInfo.base }}</span>
+              <span class="strong-desc">{{ productInfo.baseChain }}</span>
             </div>
             <div class="having-flex">
               <span>contract address:</span>
-              <span class="strong-desc">{{ productInfo.adress }}</span>
-              <img class="copy-icon" src="~assets/img/copy.png" alt />
+              <span class="strong-desc">{{ productInfo.address }}</span>
+              <img
+                class="copy-icon"
+                src="~assets/img/copy.png"
+                @click="cliBoadId(productInfo.address)"
+                alt=""
+              />
             </div>
-            <div>
+            <!-- <div>
               24h Volume:
               <span class="strong-desc">$2,358,053</span>
             </div>
             <div>
               Market Cap:
               <span class="strong-desc">$2,358,053</span>
-            </div>
+            </div> -->
           </div>
-          <div class="right-param">
+          <!-- <div class="right-param">
             <div>
               <img class="show-avatar" src alt />
               <p class="show-desc">$2,358,053</p>
@@ -108,16 +116,24 @@
               <img class="show-avatar" src alt />
               <p class="show-desc">$2,358,053</p>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="divi-line"></div>
 
         <div class="rate-style">
           <div class="small-section">RATING</div>
-          <div class="box-style">
-            <p>Hype rate</p>
-            <p class="show-desc">VERY HIGH</p>
+          <div
+            v-for="(item, index) in productInfo.rate"
+            :key="index"
+            class="box-style"
+          >
+            <p>
+              {{ item ? item : 'Hype rate' }}
+            </p>
+            <p class="show-desc">
+              {{ productInfo.icoRate ? productInfo.icoRate : 'very high' }}
+            </p>
           </div>
         </div>
 
@@ -151,15 +167,11 @@
                 </div>
 
                 <div class="right-content">
-                  <div class="product-name">
-                    {{ it.name }}
-                  </div>
+                  <div class="product-name">{{ it.name }}</div>
                   <div>{{ it.type }}</div>
                   <div class="product-id">{{ it.id }}</div>
                   <div class="product-price">GOAL:${{ it.price }}</div>
-                  <div class="product-desc">
-                    {{ it.desc ? it.desc : '' }}
-                  </div>
+                  <div class="product-desc">{{ it.desc ? it.desc : '' }}</div>
                 </div>
               </div>
             </div>
@@ -171,6 +183,8 @@
 </template>
 
 <script>
+import { baseUrl } from '~/config'
+import { copyFunc } from '~/plugins/copy.js'
 export default {
   data() {
     return {
@@ -271,6 +285,17 @@ export default {
       },
     }
   },
+  // asyncData({ $axios, app, query }) {
+  //   return $axios.get(`${baseUrl}/projects/${query.id}`).then((res) => {
+  //     return {
+  //       productInfo: res,
+  //     }
+  //   })
+  // },
+  mounted() {
+    console.log('數據', this.productInfo)
+    this.getInfo()
+  },
   methods: {
     backHome() {
       this.$router.push({
@@ -281,10 +306,26 @@ export default {
       return `/img/${item}.png`
     },
     goItem(url) {
+      console.log('跳转路径', url)
       if (url) {
         location.href = url
       } else {
       }
+    },
+    getInfo() {
+      this.$axios
+        .get(`${baseUrl}/projects/${this.$route.query.id}`)
+        .then((res) => {
+          if (res) {
+            this.productInfo = res
+          } else {
+            console.log('got error')
+          }
+        })
+    },
+    // 复制ID
+    cliBoadId(id) {
+      copyFunc(id)
     },
   },
 }
@@ -356,6 +397,10 @@ export default {
   width: 564px;
   height: 340px;
   margin-right: 20px;
+}
+.video-size {
+  width: 564px;
+  height: 340px;
 }
 .right-info {
   width: 356px;
@@ -452,6 +497,7 @@ export default {
   width: 12px;
   height: 12px;
   margin-left: 4px;
+  cursor: pointer;
 }
 .right-param {
   display: flex;
