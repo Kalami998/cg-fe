@@ -28,14 +28,14 @@
                 <img
                   v-if="item.main"
                   :src="item.main"
-                  alt=""
+                  alt
                   class="product-icon"
                 />
               </div>
               <div>
                 <div class="having-bottom">
-                  <span class="product-name">{{ item.title }}</span
-                  >({{ item.shortname }})
+                  <span class="product-name">{{ item.title }}</span>
+                  ({{ item.shortname }})
                 </div>
                 <div class="product-desc">{{ item.description }}</div>
               </div>
@@ -46,10 +46,10 @@
             <td class="body-td">
               <div class="having-flex">
                 <div class="address-area">{{ item.address }}</div>
-                <img
+                <imgs
                   v-if="item.address"
                   src="~assets/img/copy.png"
-                  alt=""
+                  alt
                   class="copy-icon"
                   @click="cliBoadId(item.address)"
                 />
@@ -61,7 +61,7 @@
       <div class="back-box">
         <div class="back-line">
           <span>BACK TO TOP</span>
-          <img class="top-icon" src="~assets/img/top.png" alt="" />
+          <img class="top-icon" src="~assets/img/top.png" alt />
         </div>
       </div>
     </div>
@@ -72,87 +72,25 @@
 import { copyFunc } from '~/plugins/copy.js'
 import { baseUrl } from '~/config'
 export default {
+  async asyncData({ $axios, query }) {
+    const { data } = await $axios.get(
+      `${baseUrl}/projects?_where[_or][0][title_contains]=${query.keyword}&_where[_or][1][description_contains]=${query.keyword}`
+    )
+    return {
+      searchList: data,
+    }
+  },
   data() {
     return {
       fans: 33.3,
       searchTitle: 'DMM Governance',
-      searchList: [
-        {
-          name: 'DMM Governance Token',
-          img: '',
-          shortname: 'Polkadot',
-          category: 'Defi',
-          isNew: true,
-          address:
-            '4373249324k3jh3984y3924y434373249324k3jh3984y3924y434373249324k3jh3984y3924y434373249324k3jh3984y3924y43',
-          price: '1100',
-          rate: 'high',
-          desc:
-            'Ownership of DMG represents the right to goverasdasd asdjaspd]a',
-          tag: 'DIA',
-        },
-        {
-          name: 'DMM Governance Token',
-          img: '',
-          shortname: 'Polkadot',
-          category: 'Defi',
-          isNew: true,
-          address: '4373249324k3jh3984y3924y43',
-          price: '1100',
-          rate: 'high',
-          desc:
-            'Ownership of DMG represents the right to goverasdasd asdjaspd]a',
-          tag: 'DIA',
-        },
-        {
-          name: 'DMM Governance Token',
-          img: '',
-          shortname: 'Polkadot',
-          category: 'Defi',
-          isNew: true,
-          address: '4373249324k3jh3984y3924y43',
-          price: '1100',
-          rate: 'high',
-          desc:
-            'Ownership of DMG represents the right to goverasdasd asdjaspd]a',
-          tag: 'DIA',
-        },
-      ],
     }
-  },
-  // asyncData({ app, query }) {
-  //   function getResult() {
-  //     return app.$axios.get(
-  //       `${baseUrl}/projects?_where[_or][0][title_contains]=${query.target}&_where[_or][1][description_contains]=${query.target}`
-  //     )
-  //   }
-  //   return app.$axios.all([getResult()]).then(
-  //     app.$axios.spread((res) => {
-  //       return {
-  //         searchList: res,
-  //         searchTitle: query.type,
-  //       }
-  //     })
-  //   )
-  // },
-  mounted() {
-    this.getList()
   },
   methods: {
     backHome() {
       this.$router.push({
         path: '/',
       })
-    },
-    getList() {
-      this.$axios
-        .get(
-          `${baseUrl}/projects?_where[_or][0][title_contains]=${this.$route.query.target}&_where[_or][1][description_contains]=${this.$route.query.target}`
-        )
-        .then((res) => {
-          this.searchList = res.data
-          this.searchTitle = this.$route.query.target
-        })
     },
     // 复制ID
     cliBoadId(id) {

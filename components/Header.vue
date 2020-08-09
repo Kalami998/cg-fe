@@ -5,9 +5,9 @@
         <img class="logo-style" src="~assets/img/logo.png" alt />
         <div class="search-area" @mouseleave="loseFocus">
           <input
+            v-model="target"
             class="input-style"
             type="search"
-            v-model="target"
             placeholder="Search"
             @focus="getFocus"
             @mouseover="getFocus"
@@ -59,7 +59,7 @@ export default {
       this.$router.push({
         path: '/search',
         query: {
-          title: this.target,
+          keyword: this.target,
         },
       })
     },
