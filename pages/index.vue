@@ -23,7 +23,6 @@
                 <div>{{ it.type }}</div>
                 <div class="product-id">
                   {{ it.id }}
-
                   <img
                     class="copy-icon"
                     src="~assets/img/copy.png"
@@ -156,6 +155,12 @@ export default {
       ],
     }
   },
+  // async asyncData({ $axios }) {
+  //   const { data } = await $axios.get(`${baseUrl}/projects?_where[id]=50`)
+  //   return {
+  //     list: data,
+  //   }
+  // },
   mounted() {
     console.log(this.dataList, '数据列表')
   },
