@@ -50,6 +50,36 @@
 import { copyFunc } from '~/plugins/copy.js'
 import { baseUrl } from '~/config'
 export default {
+  asyncData({ app }) {
+    function getListZero() {
+      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=0`)
+    }
+    function getListOne() {
+      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=1`)
+    }
+    function getListTwo() {
+      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=2`)
+    }
+    return app.$axios.all([getListZero(), getListOne(), getListTwo()]).then(
+      app.$axios.spread((res, reh, rek) => {
+        const list = []
+        let resData = ''
+        let rehData = ''
+        let rekData = ''
+        resData = res.data
+        rehData = reh.data
+        rekData = rek.data
+        list.push({
+          resData,
+          rehData,
+          rekData,
+        })
+        return {
+          dataList: list,
+        }
+      })
+    )
+  },
   data() {
     return {
       fans: 33.3,
@@ -126,26 +156,8 @@ export default {
       ],
     }
   },
-  asyncData({ app }) {
-    function getListZero() {
-      return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=0`)
-    }
-    // function getListOne() {
-    //   return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=1`)
-    // }
-    // function getListTwo() {
-    //   return app.$axios.get(`${baseUrl}/projects?_where[marketCategory]=2`)
-    // }
-    return app.$axios.all([getListZero()]).then(
-      app.$axios.spread((res) => {
-        return {
-          dataList: res,
-        }
-      })
-    )
-  },
   mounted() {
-    console.log(this.dataList, '數據列表')
+    console.log(this.dataList, '数据列表')
   },
   methods: {
     // 去详情页

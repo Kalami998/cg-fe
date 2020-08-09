@@ -28,8 +28,8 @@
               </div>
               <div>
                 <div class="having-bottom">
-                  <span class="product-name">{{ item.name }}</span
-                  >({{ item.shortname }})
+                  <span class="product-name">{{ item.name }}</span>
+                  <span v-if="item.ticker">({{ item.ticker }})</span>
                 </div>
                 <div class="product-desc">{{ item.desc }}</div>
               </div>
@@ -67,7 +67,7 @@ export default {
         {
           name: 'DMM Governance Token',
           img: '',
-          shortname: 'Polkadot',
+          ticker: 'Polkadot',
           category: 'Defi',
           isNew: true,
           address:
@@ -81,7 +81,7 @@ export default {
         {
           name: 'DMM Governance Token',
           img: '',
-          shortname: 'Polkadot',
+          ticker: 'Polkadot',
           category: 'Defi',
           isNew: true,
           address: '4373249324k3jh3984y3924y43',
@@ -94,7 +94,7 @@ export default {
         {
           name: 'DMM Governance Token',
           img: '',
-          shortname: 'Polkadot',
+          ticker: 'Polkadot',
           category: 'Defi',
           isNew: true,
           address: '4373249324k3jh3984y3924y43',

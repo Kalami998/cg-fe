@@ -34,8 +34,8 @@
               </div>
               <div>
                 <div class="having-bottom">
-                  <span class="product-name">{{ item.title }}</span
-                  >({{ item.shortname }})
+                  <span class="product-name">{{ item.title }}</span>
+                  <span v-if="item.ticker">({{ item.ticker }})</span>
                 </div>
                 <div class="product-desc">{{ item.description }}</div>
               </div>

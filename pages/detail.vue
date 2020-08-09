@@ -13,24 +13,29 @@
       <div class="product-main">
         <div class="product-info">
           <div class="left-icon">
-            <!-- <img src="~assets/img/demo.png" alt /> -->
-            <video
+            <img :src="productInfo.main" alt />
+            <!-- <video
               :src="productInfo.main"
               controls="controls"
               class="video-size"
-            ></video>
+            ></video> -->
           </div>
 
           <div class="right-info">
             <div class="having-bottom">
               <div class="img-area">
-                <img class="demo-icon" src="~assets/img/demo.png" alt />
+                <img
+                  v-if="productInfo.logo"
+                  class="demo-icon"
+                  :src="productInfo.logo"
+                  alt
+                />
               </div>
               <span class="it-name">{{ productInfo.title }}</span>
               <span class="symbol-desc">({{ productInfo.category }})</span>
             </div>
 
-            <div class="tag-area">
+            <div v-if="productInfo.tag" class="tag-area">
               <!-- <span
                 v-for="(tag, index) in productInfo.category"
                 :key="index"
@@ -74,7 +79,7 @@
             <div class="small-section">TOKEN</div>
             <div>
               symbol:
-              <span class="strong-desc">{{ productInfo.ticker }}</span>
+              <ticker class="strong-desc">{{ productInfo.ticker }}</ticker>
             </div>
             <div>
               total:
@@ -88,6 +93,7 @@
               <span>contract address:</span>
               <span class="strong-desc">{{ productInfo.address }}</span>
               <img
+                v-if="productInfo.address"
                 class="copy-icon"
                 src="~assets/img/copy.png"
                 @click="cliBoadId(productInfo.address)"
@@ -286,14 +292,14 @@ export default {
     }
   },
   // asyncData({ $axios, app, query }) {
-  //   return $axios.get(`${baseUrl}/projects/${query.id}`).then((res) => {
+  //   return app.$axios.get(`${baseUrl}/projects/${query.id}`).then((res) => {
   //     return {
-  //       productInfo: res,
+  //       productInfo: res.data,
   //     }
   //   })
   // },
   mounted() {
-    console.log('數據', this.productInfo)
+    console.log('返回数据', this.productInfo)
     this.getInfo()
   },
   methods: {
@@ -317,7 +323,7 @@ export default {
         .get(`${baseUrl}/projects/${this.$route.query.id}`)
         .then((res) => {
           if (res) {
-            this.productInfo = res
+            this.productInfo = res.data
           } else {
             console.log('got error')
           }
