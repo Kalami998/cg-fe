@@ -2,10 +2,10 @@
   <div class="all-page">
     <div class="all-content">
       <div class="popularity">
-        <a href="https://twitter.com/CryptoGala"
+        <!-- <a href="https://twitter.com/CryptoGala"
           ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
         /></a>
-        TWITTER
+        TWITTER -->
       </div>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />

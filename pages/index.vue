@@ -1,10 +1,10 @@
 <template>
   <div class="home-page">
     <div class="popularity">
-      <a href="https://twitter.com/CryptoGala"
+      <!-- <a href="https://twitter.com/CryptoGala"
         ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
       /></a>
-      TWITTER
+      TWITTER -->
     </div>
     <div class="having-flex">
       <div v-for="(item, index) in dataList" :key="index" class="having-right">
@@ -21,12 +21,15 @@
                 <div class="product-img">
                   <img :src="it.logo" alt />
                 </div>
-                <span v-if="it.icoRate">{{ it.icoRate }}</span>
+                <div v-if="it.icoRate" class="rate-style">{{ it.icoRate }}</div>
               </div>
 
               <div class="right-content">
                 <div class="product-name">
-                  {{ it.title }}<span v-if="it.ticker">({{ it.ticker }})</span>
+                  {{ it.title
+                  }}<span v-if="it.ticker" class="ticker-style"
+                    >({{ it.ticker }})</span
+                  >
                 </div>
                 <div class="tag-area">
                   <span>{{ it.tag }}</span>
@@ -301,8 +304,7 @@ export default {
 .having-flex {
   display: flex;
   align-items: flex-start;
-  flex-wrap: wrap;
-  cursor: pointer;
+  flex-wrap: wrap; /* cursor: pointer; */
   padding-bottom: 120px;
 }
 .having-right {
@@ -331,6 +333,7 @@ export default {
 }
 .detail:hover {
   background: #fafafa;
+  cursor: pointer;
 }
 .product-img {
   width: 64px;
@@ -341,6 +344,13 @@ export default {
   align-items: center;
   justify-content: center;
   margin-bottom: 22px;
+}
+.rate-style {
+  width: 62px;
+  text-align: center;
+}
+.product-img img {
+  border-radius: 2px;
 }
 .left-content {
   margin-right: 10px;
@@ -354,6 +364,9 @@ export default {
   line-height: 18px;
   font-weight: bold;
   margin-bottom: 10px;
+}
+.ticker-style {
+  font-weight: normal;
 }
 .tag-area {
   display: flex;
@@ -379,20 +392,21 @@ export default {
   width: 12px;
   height: 12px;
   margin-left: 5px;
+  cursor: pointer;
 }
 .product-price {
-  font-weight: bold;
+  font-weight: 500;
   margin-bottom: 10px;
 }
 .product-desc {
   font-weight: 500;
   width: 280px;
-  height: 14px;
-  line-height: 14px;
+  height: 32px;
+  line-height: 16px;
   margin-bottom: 30px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   padding-right: 18px;
 }
@@ -410,6 +424,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+.show-more:hover {
+  background: #fafafa;
 }
 .more-icon {
   width: 5px;

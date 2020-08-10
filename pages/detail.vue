@@ -2,10 +2,10 @@
   <div class="detail-page">
     <div class="detail-content">
       <div class="popularity">
-        <a href="https://twitter.com/CryptoGala"
+        <!-- <a href="https://twitter.com/CryptoGala"
           ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
         /></a>
-        TWITTER
+        TWITTER -->
       </div>
       <div class="keep-line" @click="backHome()">
         <img class="back-icon" src="~assets/img/back.png" alt />
@@ -47,8 +47,10 @@
                   alt
                 />
               </div>
-              <span class="it-name">{{ productInfo.title }}</span>
-              <span class="symbol-desc">({{ productInfo.category }})</span>
+              <div>
+                <span class="it-name">{{ productInfo.title }}</span>
+                <span class="symbol-desc">({{ productInfo.category }})</span>
+              </div>
             </div>
 
             <div v-if="productInfo.tag" class="tag-area">
@@ -201,10 +203,15 @@
         <div>
           <div v-if="showList.length" class="small-section">RECOMMEND</div>
           <div class="other-product">
-            <div v-for="(it, sort) in showList" :key="sort">
-              <div class="detail">
+            <div
+              v-for="(it, sort) in showList"
+              :key="sort"
+              class="product-style"
+              @click="goDetail(it)"
+            >
+              <!-- <div class="detail">
                 <div class="left-content">
-                  <!-- {{ it.img ? it.img : '' }} -->
+                   {{ it.img ? it.img : '' }}
                   <div class="product-img">
                     <img :src="it.logo" alt />
                   </div>
@@ -229,6 +236,65 @@
                     TOTAL:{{ it.total ? it.total : 'NOT SET' }}
                   </div>
                   <div class="product-desc">{{ it.desc ? it.desc : '' }}</div>
+                </div>
+              </div> -->
+              <div class="detail">
+                <div class="left-content">
+                  <!-- {{ it.img ? it.img : '' }} -->
+                  <div class="product-img">
+                    <img :src="it.logo" alt />
+                  </div>
+                  <div v-if="it.icoRate" class="icorate-style">
+                    {{ it.icoRate }}
+                  </div>
+                </div>
+
+                <div class="right-content">
+                  <div class="product-name">
+                    {{ it.title
+                    }}<span v-if="it.ticker" class="ticker-style"
+                      >({{ it.ticker }})</span
+                    >
+                  </div>
+                  <div class="tag-detail">
+                    <span>{{ it.tag }}</span>
+                    <!-- <span>{{ it.markets }}</span> -->
+                    <img
+                      v-if="returnIcon('Binance', it.markets)"
+                      class="market-icon"
+                      src="~/assets/img/binance.png"
+                      alt=""
+                    />
+                    <img
+                      v-if="returnIcon('Coinbase Pro', it.markets)"
+                      class="market-icon"
+                      src="~/assets/img/coinbasepro.png"
+                      alt=""
+                    />
+                    <img
+                      v-if="returnIcon('Huobi Global', it.markets)"
+                      class="market-icon"
+                      src="~/assets/img/huobiglobal.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="product-id">
+                    <span v-if="it.address" class="id-width">{{
+                      it.address
+                    }}</span>
+                    <img
+                      v-if="it.address"
+                      class="copy-icon"
+                      src="~assets/img/copy.png"
+                      @click.stop="cliBoadId(it.address)"
+                    />
+                  </div>
+                  <div class="product-price">
+                    TOTAL:{{ it.total ? it.total : 'NOT SET' }}
+                  </div>
+                  <div class="product-desc">
+                    {{ it.description ? it.description : '' }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -399,6 +465,26 @@ export default {
           }
         })
     },
+    // 去详情页
+    goDetail(it) {
+      // console.log('详情数据', it)
+      // this.$router.push({
+      //   path: '/detail',
+      //   query: {
+      //     id: it.id,
+      //   },
+      // })
+      location.search = `id=${it.id}`
+    },
+    returnIcon(test, target) {
+      let targetString = ''
+      for (let i = 0; i < target.length; i++) {
+        targetString += target[i].exchange
+        if (i === target.length - 1 && targetString.includes(test)) {
+          return true
+        }
+      }
+    },
   },
 }
 </script>
@@ -409,7 +495,8 @@ export default {
 }
 .detail-content {
   width: 1000px;
-  margin: 10px auto 0 auto;
+  margin: 0 auto;
+  padding-top: 10px;
   font-size: 14px;
   padding-bottom: 112px;
 }
@@ -477,11 +564,7 @@ export default {
   width: 356px;
   font-size: 16px;
 }
-.demo-icon {
-  width: 25px;
-  height: 25px;
-  border: 1px solid rgba(221, 221, 221, 1);
-}
+
 .it-name {
   font-size: 24px;
   font-weight: bold;
@@ -501,6 +584,11 @@ export default {
   width: 32px;
   padding: 3.2px;
   margin-right: 10px;
+}
+.demo-icon {
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(248, 248, 248, 1);
 }
 .brief {
   line-height: 20px;
@@ -567,12 +655,6 @@ export default {
 .having-float {
   float: left;
 }
-.copy-icon {
-  width: 12px;
-  height: 12px;
-  margin-left: 4px;
-  cursor: pointer;
-}
 .right-param {
   display: flex;
   align-items: center;
@@ -607,10 +689,13 @@ export default {
   width: 180px;
   line-height: 16px;
   text-align: center;
-  background: #eee;
+  background: #fff;
   border-radius: 2px;
   border: 1px solid rgba(238, 238, 238, 1);
   margin-right: 10px;
+}
+.box-style:hover {
+  background: #eee;
 }
 .line-style {
   display: flex;
@@ -645,14 +730,20 @@ export default {
   background: #fff;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.04);
   border-radius: 4px;
+}
+.detail:hover {
+  background: #fafafa;
+  cursor: pointer;
+}
+.product-style {
   margin-right: 10px;
 }
-.detail:last-child {
+.product-style:last-child {
   margin-right: 0;
 }
 .product-img {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 2px;
   border: 1px solid #eee;
   display: flex;
@@ -660,8 +751,14 @@ export default {
   justify-content: center;
   margin-bottom: 22px;
 }
+.icorate-style {
+  width: 62px;
+  text-align: center;
+}
+.product-img img {
+  border-radius: 2px;
+}
 .left-content {
-  width: 56px;
   margin-right: 10px;
 }
 .right-content {
@@ -674,32 +771,49 @@ export default {
   font-weight: bold;
   margin-bottom: 10px;
 }
+.ticker-style {
+  font-weight: normal;
+}
+.tag-detail {
+  display: flex;
+  align-items: center;
+  height: 14px;
+}
+
 .product-id {
   font-size: 11px;
   font-weight: 300;
+  height: 15px;
   margin: 10px 0 20px;
   display: flex;
   align-items: center;
 }
 .id-width {
-  width: 168px;
+  width: 188px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.copy-product {
+.copy-icon {
   width: 12px;
   height: 12px;
   margin-left: 5px;
+  cursor: pointer;
 }
 .product-price {
-  font-weight: bold;
+  font-weight: 500;
   margin-bottom: 10px;
 }
 .product-desc {
   font-weight: 500;
-  height: 30px;
-  margin-bottom: 14px;
+  width: 205px;
+  height: 32px;
+  line-height: 16px;
+  margin-bottom: 30px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 .vp-center {
   align-items: flex-start !important;

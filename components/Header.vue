@@ -2,7 +2,11 @@
   <div class="header">
     <div class="header-class">
       <div class="having-flex">
-        <img class="logo-style" src="~assets/img/logo.png" alt />
+        <img
+          class="logo-style"
+          src="~assets/img/logo.png"
+          @click="backhome()"
+        />
         <div class="search-area" @mouseleave="loseFocus">
           <input
             v-model="target"
@@ -129,6 +133,11 @@ export default {
         })
       }
     },
+    backhome() {
+      this.$router.push({
+        path: '/',
+      })
+    },
   },
 }
 </script>
@@ -142,6 +151,7 @@ export default {
 }
 .header-class {
   width: 1200px;
+  height: 70px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -155,7 +165,7 @@ export default {
   width: 164px;
   height: 28px;
   margin-right: 200px;
-  margin-top: 5px;
+  margin-top: 3.8px;
 }
 .input-style {
   width: 340px;
@@ -165,18 +175,28 @@ export default {
   font-size: 12px;
   padding: 0 0 0 10px;
 }
+.input-style:hover,
+.input-style:visited,
+.input-style:active {
+  border: 1px solid #ddd;
+  outline: none;
+}
+input {
+  outline: none;
+}
 .search-box {
   background: rgba(248, 248, 248, 1);
   border: 1px solid rgba(221, 221, 221, 1);
   border-left: none;
   cursor: pointer;
-  margin-top: 5px;
+  margin-top: 3.8px;
 }
 .search-area {
   position: relative;
 }
 .search-box:hover {
-  background: #ddd;
+  background: #f2f2f2;
+  border: 1px solid #f2f2f2;
 }
 .searched-list {
   position: absolute;
