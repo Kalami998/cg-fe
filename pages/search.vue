@@ -59,7 +59,7 @@
                   src="~assets/img/copy.png"
                   alt
                   class="copy-icon"
-                  @click.stop="cliBoadId(item.address)"
+                  @click.stop="cliBoadId($event, item.address)"
                 />
               </div>
             </td>
@@ -143,8 +143,8 @@ export default {
       })
     },
     // 复制ID
-    cliBoadId(id) {
-      copyFunc(id)
+    cliBoadId($event, id) {
+      copyFunc($event, id)
     },
     goDetail(item) {
       this.$router.push({
@@ -212,6 +212,9 @@ export default {
   font-size: 14px;
   line-height: 14px;
 }
+table td {
+  border-bottom: 1px solid #f1f1f1;
+}
 .table-head td {
   font-weight: bold;
   color: #fff;
@@ -221,6 +224,9 @@ export default {
     rgb(0, 138, 231) 0%,
     rgb(0, 179, 233) 100%
   );
+}
+table td:hover {
+  background: #fafafa;
 }
 .table-head td:first-child {
   padding-left: 26px;
@@ -309,8 +315,7 @@ export default {
   background: #fff;
 }
 .back-line {
-  padding: 20px;
-  border-top: 1px solid rgb(241, 241, 241);
+  padding: 20px; /* border-top: 1px solid rgb(241, 241, 241); */
   display: flex;
   align-items: center;
   height: 14px;

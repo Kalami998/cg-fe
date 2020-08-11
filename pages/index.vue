@@ -5,6 +5,9 @@
         ><img class="tiwtter-icon" src="~assets/img/tiwtter.png" alt
       /></a>
       TWITTER -->
+      <!-- <div class="copy-success">
+        Copy succeeded
+      </div> -->
     </div>
     <div class="having-flex">
       <div v-for="(item, index) in dataList" :key="index" class="having-right">
@@ -29,6 +32,14 @@
                   {{ it.title
                   }}<span v-if="it.ticker" class="ticker-style"
                     >({{ it.ticker }})</span
+                  >
+                  <span v-if="returnTime(it) == 'HOT'" class="hot-product">{{
+                    returnTime(it)
+                  }}</span>
+                  <span
+                    v-else-if="returnTime(it) == 'NEW'"
+                    class="new-product"
+                    >{{ returnTime(it) }}</span
                   >
                 </div>
                 <div class="tag-area">
@@ -61,13 +72,19 @@
                     v-if="it.address"
                     class="copy-icon"
                     src="~assets/img/copy.png"
-                    @click.stop="cliBoadId(it.address)"
+                    @click.stop="cliBoadId($event, it.address)"
                   />
                 </div>
                 <div class="product-price">
                   TOTAL:{{ it.total ? it.total : 'NOT SET' }}
                 </div>
-                <div class="product-desc">
+                <div
+                  :class="{
+                    'product-desc': true,
+                    'blue-desc': it.child,
+                    'red-desc': it.popular,
+                  }"
+                >
                   {{ it.description ? it.description : '' }}
                 </div>
               </div>
@@ -220,6 +237,7 @@ export default {
   // },
   mounted() {
     window.scrollTo(0, 0)
+    // console.log(this.dataList, '数据列表')
   },
   methods: {
     // 去详情页
@@ -245,8 +263,19 @@ export default {
     },
 
     // 复制ID
-    cliBoadId(id) {
-      copyFunc(id)
+    cliBoadId($event, id) {
+      const e = $event
+      // e.xdata = e.target.offsetLeft - 38
+      // e.ydata = e.target.offsetTop + 22
+      // console.log('高度：', e.target.offsetTop, '左边：', e.target.offsetLeft)
+      copyFunc(e, id)
+      // document.querySelector(
+      //   '.copy-success'
+      // ).style.transform = `translate3d(${e.xdata}px, ${e.ydata}px, 0)`
+      // document.querySelector('.copy-success').style.display = 'block'
+      // setTimeout(() => {
+      //   document.querySelector('.copy-success').style.display = 'none'
+      // }, 1000)
     },
 
     // 随机色
@@ -273,6 +302,22 @@ export default {
         }
       }
     },
+    returnTime(it) {
+      const nowTime = new Date()
+      if (it.icoRate.toUpperCase().includes('HIGH')) {
+        this.$set(it, 'popular', true)
+        return 'HOT'
+      } else if (
+        // 先判定一天内产生的为新
+        nowTime - new Date(it.created_at).getTime() <=
+        1000 * 60 * 60 * 24 * 1
+      ) {
+        this.$set(it, 'child', true)
+        return 'NEW'
+      } else {
+        return false
+      }
+    },
   },
 }
 </script>
@@ -295,7 +340,7 @@ export default {
   margin-bottom: 50px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .tiwtter-icon {
   width: 12px;
@@ -348,6 +393,7 @@ export default {
 .rate-style {
   width: 62px;
   text-align: center;
+  font-size: 12px;
 }
 .product-img img {
   border-radius: 2px;
@@ -364,9 +410,16 @@ export default {
   line-height: 18px;
   font-weight: bold;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 260px;
 }
 .ticker-style {
   font-weight: normal;
+  margin-left: 5px;
 }
 .tag-area {
   display: flex;
@@ -438,5 +491,57 @@ export default {
   width: 16px;
   height: 16px;
   margin: 0 0 0 5px;
+}
+.copy-success {
+  font-size: 11px;
+  width: 88px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  border-radius: 1px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+}
+.hot-product {
+  width: 24px;
+  height: 12px;
+  line-height: 12px;
+  color: #fff;
+  text-align: center;
+  font-weight: normal;
+  font-size: 8px;
+  background: linear-gradient(
+    270deg,
+    rgba(255, 108, 108, 1) 0%,
+    rgba(255, 52, 52, 1) 100%
+  );
+  border-radius: 1px;
+  margin-left: 5px;
+}
+.new-product {
+  width: 24px;
+  height: 12px;
+  line-height: 12px;
+  color: #fff;
+  text-align: center;
+  font-weight: normal;
+  font-size: 8px;
+  background: linear-gradient(
+    270deg,
+    rgba(0, 178, 233, 1) 0%,
+    rgba(0, 140, 233, 1) 100%
+  );
+  border-radius: 1px;
+  margin-left: 5px;
+}
+.blue-desc {
+  color: #028ee9;
+}
+.red-desc {
+  color: #de001b;
 }
 </style>

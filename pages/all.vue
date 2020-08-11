@@ -15,10 +15,10 @@
       <table class="all-main">
         <thead>
           <tr class="table-head" style="border-top: none;">
-            <td style="width: 42%;">PROJECT</td>
-            <td style="width: 10%;">TAG</td>
-            <td style="width: 10%;">RATE</td>
-            <td style="width: 10%;">CATEGORY</td>
+            <td style="width: 36%;">PROJECT</td>
+            <td style="width: 12%;">TAG</td>
+            <td style="width: 12%;">RATE</td>
+            <td style="width: 12%;">CATEGORY</td>
             <td style="width: 28%;">ADDRESS</td>
           </tr>
         </thead>
@@ -26,6 +26,7 @@
           <tr
             v-for="(item, index) in allList"
             :key="index"
+            class="tr-content"
             @click="goDetail(item)"
           >
             <td class="body-td">
@@ -53,7 +54,7 @@
                   src="~assets/img/copy.png"
                   alt=""
                   class="copy-icon"
-                  @click.stop="cliBoadId(item.address)"
+                  @click.stop="cliBoadId($event, item.address)"
                 />
               </div>
             </td>
@@ -159,7 +160,7 @@ export default {
         this.allTitle = 'MAINLY LISTED IN CEX'
         break
     }
-    window.addEventListener('scroll', this.debonce(this.getList, 3000), true)
+    window.addEventListener('scroll', this.debonce(this.getList, 1200), true)
   },
   destroyed() {
     window.removeEventListener('scroll', this.getList)
@@ -214,8 +215,8 @@ export default {
       })
     },
     // 复制ID
-    cliBoadId(id) {
-      copyFunc(id)
+    cliBoadId($event, id) {
+      copyFunc($event, id)
     },
     goDetail(item) {
       this.$router.push({
@@ -283,6 +284,9 @@ export default {
   font-size: 14px;
   line-height: 14px;
 }
+table td {
+  border-bottom: 1px solid #f1f1f1;
+}
 .table-head td {
   font-weight: bold;
   color: #fff;
@@ -293,6 +297,9 @@ export default {
     rgb(0, 179, 233) 100%
   );
 }
+.tr-content:hover > td {
+  background: #fafafa;
+}
 .table-head td:first-child {
   padding-left: 26px;
   border-radius: 4px 0 0 0;
@@ -301,6 +308,7 @@ export default {
   border-radius: 0 4px 0 0;
   padding-right: 26px;
 }
+
 .body-td {
   background: #fff;
   padding: 24px 0;
@@ -376,8 +384,7 @@ export default {
   background: #fff;
 }
 .back-line {
-  padding: 20px;
-  border-top: 1px solid rgb(241, 241, 241);
+  padding: 20px; /* border-top: 1px solid rgb(241, 241, 241); */
   display: flex;
   align-items: center;
   justify-content: center;

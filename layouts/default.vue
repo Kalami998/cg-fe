@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="copy-success">
+      Copy succeeded
+    </div>
     <Header />
     <Nuxt />
     <Footer></Footer>
@@ -67,5 +70,19 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+.copy-success {
+  font-size: 11px;
+  width: 88px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  border-radius: 1px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
 }
 </style>

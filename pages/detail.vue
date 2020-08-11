@@ -53,14 +53,16 @@
               </div>
             </div>
 
-            <div v-if="productInfo.tag" class="tag-area">
+            <div class="tag-area">
               <!-- <span
                 v-for="(tag, index) in productInfo.category"
                 :key="index"
                 class="tag-style"
                 >{{ tag }}</span
               >-->
-              <span class="tag-style">{{ productInfo.tag }}</span>
+              <span v-if="productInfo.tag" class="tag-style">{{
+                productInfo.tag
+              }}</span>
               <img
                 v-if="marketString.includes('Binance')"
                 class="market-icon"
@@ -136,7 +138,7 @@
                 class="copy-icon"
                 src="~assets/img/copy.png"
                 alt=""
-                @click="cliBoadId(productInfo.address)"
+                @click="cliBoadId($event, productInfo.address)"
               />
             </div>
             <!-- <div>
@@ -286,7 +288,7 @@
                       v-if="it.address"
                       class="copy-icon"
                       src="~assets/img/copy.png"
-                      @click.stop="cliBoadId(it.address)"
+                      @click.stop="cliBoadId($event, it.address)"
                     />
                   </div>
                   <div class="product-price">
@@ -309,6 +311,7 @@
 import { baseUrl } from '~/config'
 import { copyFunc } from '~/plugins/copy.js'
 export default {
+  layout: 'default',
   asyncData({ $axios, app, query }) {
     return app.$axios.get(`${baseUrl}/projects/${query.id}`).then((res) => {
       return {
@@ -406,7 +409,6 @@ export default {
         }
       })
     }
-    console.log('详情页数据', this.productInfo)
     this.getListOne()
   },
   methods: {
@@ -435,8 +437,8 @@ export default {
         })
     },
     // 复制ID
-    cliBoadId(id) {
-      copyFunc(id)
+    cliBoadId($event, id) {
+      copyFunc($event, id)
     },
     getListOne() {
       this.showList = []
@@ -531,14 +533,16 @@ export default {
   display: flex;
   flex-wrap: wrap;
   padding-left: 42px;
+  height: 34px;
   align-items: center;
 }
 .tag-style {
-  margin: 0 10px 10px 0; /* padding-right: 10px; */ /* border-right: 1px solid rgba(221, 221, 221, 1); */
+  margin: 0 0 10px 0; /* padding-right: 10px; */ /* border-right: 1px solid rgba(221, 221, 221, 1); */
 }
 .tag-style:last-child {
   border: none;
   padding-right: none;
+  margin: 0 0 10px 0 !important;
 }
 .product-main {
   background: #fff;
@@ -593,10 +597,11 @@ export default {
 .brief {
   line-height: 20px;
   display: -webkit-box;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 7;
+  height: 148px;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 .icon-area {
   display: flex;
@@ -727,7 +732,7 @@ export default {
   padding: 15px 15px 0 15px;
   text-align: left;
   width: 306px;
-  background: #fff;
+  background: #eee;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.04);
   border-radius: 4px;
 }
@@ -754,6 +759,7 @@ export default {
 .icorate-style {
   width: 62px;
   text-align: center;
+  font-size: 12px;
 }
 .product-img img {
   border-radius: 2px;
@@ -821,6 +827,6 @@ export default {
 .market-icon {
   width: 16px;
   height: 16px;
-  margin: 0 10px 10px 5px;
+  margin: 0 0 10px 5px;
 }
 </style>

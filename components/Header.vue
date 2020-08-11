@@ -33,17 +33,23 @@
       </div>
       <div class="hot-category">
         <span
-          :class="{ 'right-distance': true, 'current-title': currentPath == 0 }"
+          :class="{
+            'category-span': true,
+            'current-title': currentPath === 0,
+          }"
           @click="goAll('unlisted', 0)"
           >Unlisted</span
         >
         <span
-          :class="{ 'right-distance': true, 'current-title': currentPath == 1 }"
-          @click="goAll('mainlylistedinex', 1)"
+          :class="{
+            'category-span': true,
+            'current-title': currentPath === 1,
+          }"
+          @click="goAll('mainlylistedindex', 1)"
           >Mainly Listed in DEX</span
         >
         <span
-          :class="{ 'current-title': currentPath == 2 }"
+          :class="{ 'category-span': true, 'current-title': currentPath === 2 }"
           @click="goAll('mainlylistedincex', 2)"
         >
           Mainly Listed in CEX</span
@@ -68,40 +74,44 @@ export default {
         // { name: 'LUKSO' },
       ], // 搜索记录
       inputByBlur: false, // 搜索框是否获取了焦点
-      currentPath: '', // 当前路径
+      currentPath: -1, // 当前路径
+      currentTitle: '', // 当前标题
     }
   },
+  computed: {
+    routeFunction() {
+      return this.$route.query
+    },
+  },
   watch: {
-    $route() {
-      switch (this.$router.query && this.$router.query.title) {
-        case 'unlisted':
+    '$route.query'(newV, oldV) {
+      if (newV.title) {
+        this.currentTitle = newV.title
+        if (this.currentTitle === 'unlisted') {
           this.currentPath = 0
-          break
-        case 'mainlylistedindex':
+        } else if (this.currentTitle === 'mainlylistedindex') {
           this.currentPath = 1
-          break
-        case 'mainlylistedincex':
+        } else if (this.currentTitle === 'mainlylistedincex') {
           this.currentPath = 2
-          break
+        }
+      } else {
+        this.currentPath = -1
       }
     },
   },
   mounted() {
-    // if (this.$router.query) {
-    //   switch (this.$router.query.title) {
-    //     case 'unlisted':
-    //       this.currentPath = 0
-    //       break
-    //     case 'mainlylistedindex':
-    //       this.currentPath = 1
-    //       break
-    //     case 'mainlylistedincex':
-    //       this.currentPath = 2
-    //       break
-    //   }
-    // } else {
-    //   this.currentPath = -1
-    // }
+    if (this.$route.query && this.$route.query.title) {
+      this.currentTitle = this.$route.query.title
+      if (this.currentTitle === 'unlisted') {
+        this.currentPath = 0
+      } else if (this.currentTitle === 'mainlylistedindex') {
+        this.currentPath = 1
+      } else if (this.currentTitle === 'mainlylistedincex') {
+        this.currentPath = 2
+      }
+    } else {
+      this.currentPath = -1
+    }
   },
   methods: {
     // 去搜索二级页
@@ -145,6 +155,7 @@ export default {
 <style>
 .header {
   width: 100%;
+  min-width: 1200px;
   height: 70px;
   line-height: 70px;
   border-bottom: 1px solid #ddd;
@@ -232,7 +243,15 @@ input {
   font-weight: 500;
   cursor: pointer;
 }
-.hot-category span:hover {
+.category-span {
+  width: 148px;
+  text-align: center;
+  display: inline-block;
+}
+.category-span:first-child {
+  width: 60px;
+}
+.category-span:hover {
   font-weight: bold;
 }
 .current-title {
