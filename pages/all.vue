@@ -163,7 +163,7 @@ export default {
     window.addEventListener('scroll', this.debonce(this.getList, 1200), true)
   },
   destroyed() {
-    window.removeEventListener('scroll', this.getList)
+    window.removeEventListener('scroll', this.debonce(this.getList, 1200))
   },
   methods: {
     debonce(func, delay) {

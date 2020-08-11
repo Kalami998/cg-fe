@@ -2,11 +2,11 @@
 export function copyFunc(e, target) {
   console.log(e, '点击位置')
   e.xdata =
-    e.target.offsetLeft && e.target.offsetLeft > e.pageX
+    e.target && e.target.offsetLeft > e.pageX
       ? e.target.offsetLeft - 38
       : e.pageX - 38
   e.ydata =
-    e.target.offsetTop && e.target.offsetTop > e.pageY
+    e.target && e.target.offsetTop > e.pageY
       ? e.target.offsetTop + 22
       : e.pageY + 22
   document.querySelector(
