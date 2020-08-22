@@ -33,16 +33,14 @@
                   }}<span v-if="it.ticker" class="ticker-style"
                     >({{ it.ticker }})</span
                   >
-                  <span v-if="returnTime(it) == 'HOT'" class="hot-product">{{
-                    returnTime(it)
-                  }}</span>
-                  <span
-                    v-else-if="returnTime(it) == 'NEW'"
-                    class="new-product"
-                    >{{ returnTime(it) }}</span
+                  <span v-if="returnTime(it) == 'HOT'" class="hot-product">
+                    <span class="small-size">{{ returnTime(it) }}</span>
+                  </span>
+                  <span v-else-if="returnTime(it) == 'NEW'" class="new-product"
+                    ><span class="small-size">{{ returnTime(it) }}</span></span
                   >
                 </div>
-                <div class="tag-area">
+                <div v-if="it.tag" class="tag-area">
                   <span>{{ it.tag }}</span>
                   <!-- <span>{{ it.markets }}</span> -->
                   <img
@@ -64,12 +62,9 @@
                     alt=""
                   />
                 </div>
-                <div class="product-id">
-                  <span v-if="it.address" class="id-width">{{
-                    it.address
-                  }}</span>
+                <div v-if="it.address" class="product-id">
+                  <span class="id-width">{{ it.address }}</span>
                   <img
-                    v-if="it.address"
                     class="copy-icon"
                     src="~assets/img/copy.png"
                     @click.stop="cliBoadId($event, it.address)"
@@ -375,6 +370,7 @@ export default {
   align-items: flex-start;
   padding: 30px 0 0 24px;
   text-align: left;
+  height: 202px;
 }
 .detail:hover {
   background: #fafafa;
@@ -425,13 +421,14 @@ export default {
   display: flex;
   align-items: center;
   height: 14px;
+  margin-bottom: 10px;
 }
 
 .product-id {
   font-size: 11px;
   font-weight: 300;
   height: 15px;
-  margin: 10px 0 20px;
+  margin: 0 0 20px;
   display: flex;
   align-items: center;
 }
@@ -513,7 +510,7 @@ export default {
   color: #fff;
   text-align: center;
   font-weight: normal;
-  font-size: 8px;
+  font-size: 12px;
   background: linear-gradient(
     270deg,
     rgba(255, 108, 108, 1) 0%,
@@ -529,7 +526,7 @@ export default {
   color: #fff;
   text-align: center;
   font-weight: normal;
-  font-size: 8px;
+  font-size: 12px;
   background: linear-gradient(
     270deg,
     rgba(0, 178, 233, 1) 0%,
@@ -537,6 +534,10 @@ export default {
   );
   border-radius: 1px;
   margin-left: 5px;
+}
+.small-size {
+  transform: scale(0.6);
+  display: block;
 }
 .blue-desc {
   color: #028ee9;

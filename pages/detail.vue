@@ -38,53 +38,54 @@
           </div>
 
           <div class="right-info">
-            <div class="having-bottom">
-              <div class="img-area">
-                <img
-                  v-if="productInfo.logo"
-                  class="demo-icon"
-                  :src="productInfo.logo"
-                  alt
-                />
+            <div class="fixed-height">
+              <div class="having-bottom">
+                <div class="img-area">
+                  <img
+                    v-if="productInfo.logo"
+                    class="demo-icon"
+                    :src="productInfo.logo"
+                    alt
+                  />
+                </div>
+                <div>
+                  <span class="it-name">{{ productInfo.title }}</span>
+                  <span class="symbol-desc">({{ productInfo.category }})</span>
+                </div>
               </div>
-              <div>
-                <span class="it-name">{{ productInfo.title }}</span>
-                <span class="symbol-desc">({{ productInfo.category }})</span>
-              </div>
-            </div>
 
-            <div class="tag-area">
-              <!-- <span
+              <div class="tag-area">
+                <!-- <span
                 v-for="(tag, index) in productInfo.category"
                 :key="index"
                 class="tag-style"
                 >{{ tag }}</span
               >-->
-              <span v-if="productInfo.tag" class="tag-style">{{
-                productInfo.tag
-              }}</span>
-              <img
-                v-if="marketString.includes('Binance')"
-                class="market-icon"
-                src="~/assets/img/binance.png"
-                alt=""
-              />
-              <img
-                v-if="marketString.includes('Coinbase Pro')"
-                class="market-icon"
-                src="~/assets/img/coinbasepro.png"
-                alt=""
-              />
-              <img
-                v-if="marketString.includes('Huobi Global')"
-                class="market-icon"
-                src="~/assets/img/huobiglobal.png"
-                alt=""
-              />
+                <span v-if="productInfo.tag" class="tag-style">{{
+                  productInfo.tag
+                }}</span>
+                <img
+                  v-if="marketString.includes('Binance')"
+                  class="market-icon"
+                  src="~/assets/img/binance.png"
+                  alt=""
+                />
+                <img
+                  v-if="marketString.includes('Coinbase Pro')"
+                  class="market-icon"
+                  src="~/assets/img/coinbasepro.png"
+                  alt=""
+                />
+                <img
+                  v-if="marketString.includes('Huobi Global')"
+                  class="market-icon"
+                  src="~/assets/img/huobiglobal.png"
+                  alt=""
+                />
+              </div>
+
+              <div class="brief">{{ productInfo.description }}</div>
             </div>
-
-            <div class="brief">{{ productInfo.description }}</div>
-
             <div class="icon-area">
               <img
                 v-for="(item, index) in productInfo.socials"
@@ -115,22 +116,22 @@
 
         <div class="param-detail">
           <div class="left-param">
-            <div class="small-section">TOKEN</div>
-            <div>
+            <div class="small-section keep-bottom">TOKEN</div>
+            <div class="keep-bottom">
               symbol:
               <span class="strong-desc">{{ productInfo.ticker }}</span>
             </div>
-            <div>
+            <div class="keep-bottom">
               TOTAL:
               <span class="strong-desc">{{
                 productInfo.total ? productInfo.total : 'NOT SET'
               }}</span>
             </div>
-            <div>
+            <div class="keep-bottom">
               base:
               <span class="strong-desc">{{ productInfo.baseChain }}</span>
             </div>
-            <div class="having-flex">
+            <div class="having-flex keep-bottom">
               <span>contract address:</span>
               <span class="strong-desc">{{ productInfo.address }}</span>
               <img
@@ -141,11 +142,11 @@
                 @click="cliBoadId($event, productInfo.address)"
               />
             </div>
-            <!-- <div>
+            <!-- <div class="keep-bottom">
               24h Volume:
               <span class="strong-desc">$2,358,053</span>
             </div>
-            <div>
+            <div class="keep-bottom">
               Market Cap:
               <span class="strong-desc">$2,358,053</span>
             </div> -->
@@ -531,8 +532,7 @@ export default {
 .tag-area {
   width: 356px;
   display: flex;
-  flex-wrap: wrap;
-  padding-left: 42px;
+  flex-wrap: wrap; /* padding-left: 42px; */
   height: 34px;
   align-items: center;
 }
@@ -578,15 +578,17 @@ export default {
   margin-left: 5px;
 }
 .having-bottom {
-  margin-bottom: 16px;
-  display: flex;
+  display: flex; /* margin-bottom: 16px; */
   align-items: flex-start;
   line-height: 32px;
+}
+.fixed-height {
+  height: 268px;
 }
 .img-area {
   height: 32px;
   width: 32px;
-  padding: 3.2px;
+  padding: 3.2px 3.2px 3.2px 0;
   margin-right: 10px;
 }
 .demo-icon {
@@ -597,11 +599,9 @@ export default {
 .brief {
   line-height: 20px;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
-  height: 148px;
+  -webkit-line-clamp: 7; /* height: 148px; */
   -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 24px;
+  overflow: hidden; /* margin-bottom: 24px; */
 }
 .icon-area {
   display: flex;
@@ -643,11 +643,15 @@ export default {
 }
 .small-section {
   font-size: 18px;
+  height: 18px;
   font-weight: 800;
   margin-bottom: 20px;
 }
-.left-param div {
+.keep-bottom {
   margin-bottom: 16px;
+}
+.keep-bottom:last-child {
+  margin-bottom: 0;
 }
 .strong-desc {
   font-weight: bold;
@@ -732,12 +736,12 @@ export default {
   padding: 15px 15px 0 15px;
   text-align: left;
   width: 306px;
-  background: #eee;
-  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.04);
+  background: #fafafa; /* box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.04); */
+  border: 1px solid rgba(238, 238, 238, 1);
   border-radius: 4px;
 }
 .detail:hover {
-  background: #fafafa;
+  background: #fff;
   cursor: pointer;
 }
 .product-style {

@@ -15,11 +15,11 @@
       <table class="all-main">
         <thead>
           <tr class="table-head" style="border-top: none;">
-            <td style="width: 36%;">PROJECT</td>
-            <td style="width: 12%;">TAG</td>
-            <td style="width: 12%;">RATE</td>
-            <td style="width: 12%;">CATEGORY</td>
-            <td style="width: 28%;">ADDRESS</td>
+            <td style="width: 38%;">PROJECT</td>
+            <td style="width: 10%;">TAG</td>
+            <td style="width: 10%;">RATE</td>
+            <td style="width: 10%;">CATEGORY</td>
+            <td style="width: 32%;">ADDRESS</td>
           </tr>
         </thead>
         <tbody>
@@ -331,7 +331,7 @@ table td {
   cursor: pointer;
 }
 .address-area {
-  max-width: 296px;
+  min-width: 296px;
   line-height: 24px;
   word-wrap: break-word;
   word-break: break-all;

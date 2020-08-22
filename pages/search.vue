@@ -15,17 +15,18 @@
       <table class="search-main">
         <thead>
           <tr class="table-head" style="border-top: none;">
-            <td style="width: 42%;">PROJECT</td>
+            <td style="width: 38%;">PROJECT</td>
             <td style="width: 10%;">TAG</td>
             <td style="width: 10%;">RATE</td>
             <td style="width: 10%;">CATEGORY</td>
-            <td style="width: 28%;">ADDRESS</td>
+            <td style="width: 32%;">ADDRESS</td>
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="(item, index) in searchList"
             :key="index"
+            class="tr-content"
             @click="goDetail(item)"
           >
             <td class="body-td">
@@ -225,7 +226,7 @@ table td {
     rgb(0, 179, 233) 100%
   );
 }
-table td:hover {
+.tr-content:hover > td {
   background: #fafafa;
 }
 .table-head td:first-child {
@@ -258,7 +259,7 @@ table td:hover {
   cursor: pointer;
 }
 .address-area {
-  max-width: 296px;
+  min-width: 296px;
   line-height: 24px;
   word-wrap: break-word;
   word-break: break-all;

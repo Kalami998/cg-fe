@@ -186,28 +186,29 @@ export default {
   font-size: 12px;
   padding: 0 0 0 10px;
 }
+input {
+  outline: none;
+}
 .input-style:hover,
 .input-style:visited,
 .input-style:active {
+  outline: none;
   border: 1px solid #ddd;
-  outline: none;
-}
-input {
-  outline: none;
 }
 .search-box {
   background: rgba(248, 248, 248, 1);
   border: 1px solid rgba(221, 221, 221, 1);
   border-left: none;
   cursor: pointer;
-  margin-top: 3.8px;
+  height: 31px;
+  line-height: 31px;
+  margin-top: 5px;
 }
 .search-area {
   position: relative;
 }
 .search-box:hover {
-  background: #f2f2f2;
-  border: 1px solid #f2f2f2;
+  background: #f2f2f2; /* border: 1px solid #f2f2f2; */
 }
 .searched-list {
   position: absolute;
